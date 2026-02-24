@@ -1,0 +1,38 @@
+{
+    "name": "Go Development",
+    "image": "mcr.microsoft.com/devcontainers/go:1.25", // Or specify your desired Go version, e.g., 1.22-bookworm
+    "features": {
+        // Optional: Add features like Node.js if your Go app has a frontend
+        // "ghcr.io/devcontainers/features/node:1": {
+        //     "version": "latest"
+        // }
+    "ghcr.io/danzilberdan/devcontainers/opencode:0": {}
+
+    },
+    "customizations": {
+        "vscode": {
+            "settings": {
+                "go.toolsManagement.autoUpdate": true,
+                "go.lintOnSave": "workspace",
+                "go.formatOnSave": true,
+                "go.useLanguageServer": true,
+                "go.lintTool": "golangci-lint", // Recommended linter
+                // Add any other VS Code settings specific to Go development
+            },
+            "extensions": [
+                "golang.go", // Official Go extension for VS Code
+                "ms-azuretools.vscode-docker", // Docker extension
+                // Add any other extensions you find useful, e.g., Code Spell Checker
+            ]
+        }
+    },
+    "mounts": [
+        {
+            "source": "${localWorkspaceFolder}/.opencode/auth.json",
+            "target": "/mnt/opencode-auth.json",
+            "type": "bind"
+        }
+    ],
+    // Optional: Commands to run after the container is created
+    "postCreateCommand": "go mod tidy" // Example: Ensure Go modules are in order
+}
