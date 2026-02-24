@@ -1,0 +1,89 @@
+## Relevant Files
+
+- `cmd/root.go` - Root Cobra command setup
+- `cmd/generate.go` - Generate diagram command implementation
+- `cmd/version.go` - Version command implementation
+- `internal/parser/parser.go` - AST parsing logic for Go struct tags
+- `internal/parser/annotation.go` - Annotation struct tag parsing
+- `internal/model/diagram.go` - Component, Connection, Diagram data structures
+- `internal/generator/drawio.go` - Draw.io XML generator
+- `internal/generator/formatter.go` - Output formatter interface
+- `internal/validator/validator.go` - Input validation logic
+- `main.go` - CLI entry point
+- `go.mod` - Go module definition
+- `bin/diagram-gen` - Built binary
+
+## Notes
+
+- Unit tests should be placed alongside the code files they are testing (e.g., `parser.go` and `parser_test.go` in the same directory).
+- Use `go test ./...` to run all tests.
+- Use `go build -o bin/diagram-gen` to build the CLI.
+
+## Tasks
+
+- [x] 0.0 Create feature branch
+  - [x] 0.1 Create and checkout a new branch for this feature (e.g., `git checkout -b feature/diagram-generator`)
+- [x] 1.0 Project Setup
+  - [x] 1.1 Initialize Go module with `go mod init`
+  - [x] 1.2 Install Cobra CLI with `go install github.com/spf13/cobra-cli@latest`
+  - [x] 1.3 Create project directory structure (cmd, internal packages)
+  - [x] 1.4 Set up main.go entry point
+  - [x] 1.5 Initialize Cobra root command in cmd/root.go
+  - [x] 1.6 Verify basic CLI runs with `go run main.go`
+- [x] 2.0 Code Parser
+  - [x] 2.1 Create internal/parser package
+  - [x] 2.2 Implement AST walker to traverse Go source files
+  - [x] 2.3 Extract struct tags from type declarations
+  - [x] 2.4 Parse diagram tag format: `diagram:"type=component,name=ServiceA,connectsTo=ServiceB"`
+  - [x] 2.5 Handle comma-separated values in connectsTo field
+  - [x] 2.6 Add support for optional description and direction fields
+  - [x] 2.7 Create parser_test.go with test cases for various tag formats
+- [x] 3.0 Diagram Model
+  - [x] 3.1 Create internal/model package
+  - [x] 3.2 Define Component struct with Type, Name, Description, Direction fields
+  - [x] 3.3 Define Connection struct with Source, Target, Direction fields
+  - [x] 3.4 Define Diagram struct to hold Components and Connections
+  - [x] 3.5 Add DiagramType enum (architecture, flowchart, network)
+  - [x] 3.6 Create model_test.go with basic struct validation tests
+- [x] 4.0 Draw.io Generator
+  - [x] 4.1 Create internal/generator package
+  - [x] 4.2 Define Formatter interface for future format extensibility
+  - [x] 4.3 Implement drawio.go with XML generation
+  - [x] 4.4 Map component types to draw.io shapes (rounded rect, cylinder, etc.)
+  - [x] 4.5 Implement connection/arrow generation between components
+  - [x] 4.6 Add color coding for different component types
+  - [x] 4.7 Generate legend/key section in the diagram (simplified - generates shapes without labels)
+  - [x] 4.8 Implement basic auto-layout (grid or layered)
+  - [x] 4.9 Create generator_test.go with sample diagram generation tests
+- [x] 5.0 CLI Commands
+  - [x] 5.1 Implement generate command in cmd/generate.go
+  - [x] 5.2 Add --input/-i flag for source file or directory (via positional args)
+  - [x] 5.3 Add --output/-o flag for output file path
+  - [x] 5.4 Add --type flag for diagram type (architecture, flowchart, network)
+  - [x] 5.5 Implement version command in cmd/version.go
+  - [x] 5.6 Add help text describing all available options
+  - [x] 5.7 Wire up parser and generator in generate command
+  - [x] 5.8 Test CLI with sample annotated Go file
+- [x] 6.0 Validation & Error Handling
+  - [x] 6.1 Create internal/validator package
+  - [x] 6.2 Validate file/directory input exists and is readable
+  - [x] 6.3 Validate Go source files are parseable
+  - [x] 6.4 Validate component type is recognized
+  - [x] 6.5 Provide clear error messages for malformed annotations
+  - [x] 6.6 Handle case where no diagram annotations are found
+  - [x] 6.7 Add validator_test.go with error case tests
+- [x] 7.0 Testing
+  - [x] 7.1 Write unit tests for parser package
+  - [x] 7.2 Write unit tests for model package
+  - [x] 7.3 Write unit tests for generator package
+  - [x] 7.4 Write unit tests for validator package
+  - [x] 7.5 Add integration test with sample Go file
+  - [x] 7.6 Verify generated XML is valid draw.io format
+  - [x] 7.7 Run `go test ./...` and ensure all tests pass
+- [x] 8.0 Documentation
+  - [x] 8.1 Create README.md with installation instructions
+  - [x] 8.2 Add usage examples with annotated Go code samples
+  - [x] 8.3 Document all CLI flags
+  - [x] 8.4 Add section on diagram annotation syntax
+  - [x] 8.5 Add CI/CD integration example (GitHub Actions)
+  - [x] 8.6 Add example output diagrams (screenshots or descriptions)
