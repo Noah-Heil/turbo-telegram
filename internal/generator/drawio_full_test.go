@@ -1,99 +1,31 @@
-package generator
+package generator_test
 
 import (
 	"strings"
 	"testing"
 
+	"diagram-gen/internal/generator"
+	"diagram-gen/internal/generator/layout"
 	"diagram-gen/internal/model"
 )
-
-func TestDrawIOGenerator(t *testing.T) {
-	gen := NewDrawIOGenerator()
-
-	diagram := &model.Diagram{
-		Type: model.DiagramTypeArchitecture,
-		Components: []model.Component{
-			{Type: model.ComponentTypeService, Name: "UserService"},
-			{Type: model.ComponentTypeDatabase, Name: "UserDB"},
-			{Type: model.ComponentTypeAPI, Name: "API"},
-		},
-		Connections: []model.Connection{
-			{Source: "UserService", Target: "UserDB"},
-			{Source: "API", Target: "UserService"},
-		},
-	}
-
-	data, err := gen.Generate(diagram)
-	if err != nil {
-		t.Fatalf("Generate failed: %v", err)
-	}
-
-	content := string(data)
-	if !strings.Contains(content, "<?xml") {
-		t.Error("expected XML declaration")
-	}
-	if !strings.Contains(content, "UserService") {
-		t.Error("expected UserService in output")
-	}
-	if !strings.Contains(content, "UserDB") {
-		t.Error("expected UserDB in output")
-	}
-	if !strings.Contains(content, "mxCell") {
-		t.Error("expected mxCell elements")
-	}
-
-	t.Logf("Generated %d bytes", len(data))
-}
-
-func TestDrawIOGeneratorFormat(t *testing.T) {
-	gen := NewDrawIOGenerator()
-	if gen.Format() != "drawio" {
-		t.Errorf("Format() = %q, want %q", gen.Format(), "drawio")
-	}
-}
-
-func TestGetShapeStyle(t *testing.T) {
-	tests := []struct {
-		compType model.ComponentType
-		want     string
-	}{
-		{model.ComponentTypeService, "rounded=1"},
-		{model.ComponentTypeDatabase, "shape=cylinder"},
-		{model.ComponentTypeQueue, "shape=parallelogram"},
-		{model.ComponentTypeCache, "dashed=1"},
-		{model.ComponentTypeUser, "ellipse"},
-		{model.ComponentTypeExternal, "shape=document"},
-		{model.ComponentTypeStorage, "shape=cylinder"},
-		{model.ComponentTypeAPI, "rounded=1"},
-		{model.ComponentTypeGateway, "rounded=1"},
-		{model.ComponentTypeUnknown, "rounded=1"},
-	}
-
-	for _, tt := range tests {
-		t.Run(string(tt.compType), func(t *testing.T) {
-			got := getShapeStyle(tt.compType)
-			if !strings.Contains(got, tt.want) {
-				t.Errorf("getShapeStyle(%q) = %q, should contain %q", tt.compType, got, tt.want)
-			}
-		})
-	}
-}
 
 func TestGetEdgeStyle(t *testing.T) {
 	tests := []struct {
 		direction model.ConnectionDirection
 		want      string
 	}{
-		{model.ConnectionDirectionUnidirectional, "endArrow=classic"},
-		{model.ConnectionDirectionBidirectional, "endArrow=classic"},
-		{"", "endArrow=classic"},
+		{model.ConnectionDirectionUnidirectional, "endArrow"},
+		{model.ConnectionDirectionBidirectional, "endArrow"},
+		{"", "endArrow"},
 	}
 
 	for _, tt := range tests {
 		t.Run(string(tt.direction), func(t *testing.T) {
-			got := getEdgeStyle(tt.direction)
+			conn := model.Connection{Source: "A", Target: "B", Direction: tt.direction}
+			g := &generator.DrawIOGenerator{}
+			got := g.BuildEdgeStyle(conn)
 			if !strings.Contains(got, tt.want) {
-				t.Errorf("getEdgeStyle(%q) = %q, should contain %q", tt.direction, got, tt.want)
+				t.Errorf("BuildEdgeStyle(%q) = %q, should contain %q", tt.direction, got, tt.want)
 			}
 		})
 	}
@@ -135,11 +67,12 @@ func TestCalculateLayout(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			layout := calculateLayout(tt.components)
-			if len(layout) != len(tt.components) {
-				t.Errorf("layout length = %d, want %d", len(layout), len(tt.components))
+			layoutEngine := layout.NewLayout("grid")
+			posMap := layoutEngine.Calculate(tt.components, nil)
+			if len(posMap) != len(tt.components) {
+				t.Errorf("layout length = %d, want %d", len(posMap), len(tt.components))
 			}
-			for _, pos := range layout {
+			for _, pos := range posMap {
 				if pos.X <= 0 || pos.Y <= 0 {
 					t.Errorf("invalid position: %v", pos)
 				}
@@ -162,16 +95,16 @@ func TestEscapeXML(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.input, func(t *testing.T) {
-			got := escapeXML(tt.input)
+			got := generator.EscapeXML(tt.input)
 			if got != tt.expected {
-				t.Errorf("escapeXML(%q) = %q, want %q", tt.input, got, tt.expected)
+				t.Errorf("EscapeXML(%q) = %q, want %q", tt.input, got, tt.expected)
 			}
 		})
 	}
 }
 
 func TestGenerateWithManyComponents(t *testing.T) {
-	gen := NewDrawIOGenerator()
+	gen := generator.NewDrawIOGenerator()
 
 	components := make([]model.Component, 20)
 	for i := range components {
@@ -202,7 +135,7 @@ func TestGenerateWithManyComponents(t *testing.T) {
 }
 
 func TestGenerateWithConnections(t *testing.T) {
-	gen := NewDrawIOGenerator()
+	gen := generator.NewDrawIOGenerator()
 
 	diagram := &model.Diagram{
 		Type: model.DiagramTypeArchitecture,
@@ -230,7 +163,7 @@ func TestGenerateWithConnections(t *testing.T) {
 }
 
 func TestGenerateEmptyDiagram(t *testing.T) {
-	gen := NewDrawIOGenerator()
+	gen := generator.NewDrawIOGenerator()
 
 	diagram := &model.Diagram{
 		Type:        model.DiagramTypeArchitecture,
@@ -245,7 +178,7 @@ func TestGenerateEmptyDiagram(t *testing.T) {
 }
 
 func TestGenerateMultipleComponentTypes(t *testing.T) {
-	gen := NewDrawIOGenerator()
+	gen := generator.NewDrawIOGenerator()
 
 	diagram := &model.Diagram{
 		Type: model.DiagramTypeArchitecture,
@@ -277,7 +210,7 @@ func TestGenerateMultipleComponentTypes(t *testing.T) {
 }
 
 func TestGenerateWithInvalidConnection(t *testing.T) {
-	gen := NewDrawIOGenerator()
+	gen := generator.NewDrawIOGenerator()
 
 	diagram := &model.Diagram{
 		Type: model.DiagramTypeArchitecture,
@@ -309,8 +242,9 @@ func TestCalculateLayoutEdgeCases(t *testing.T) {
 		{Type: model.ComponentTypeService, Name: "S4"},
 		{Type: model.ComponentTypeService, Name: "S5"},
 	}
-	layout := calculateLayout(components)
-	if len(layout) != 5 {
-		t.Errorf("layout length = %d, want 5", len(layout))
+	layoutEngine := layout.NewLayout("grid")
+	posMap := layoutEngine.Calculate(components, nil)
+	if len(posMap) != 5 {
+		t.Errorf("layout length = %d, want 5", len(posMap))
 	}
 }

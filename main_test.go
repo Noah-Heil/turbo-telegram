@@ -25,7 +25,7 @@ func TestMainExit(t *testing.T) {
 	}
 }
 
-func TestMainSuccess(t *testing.T) {
+func TestMainSuccess(_ *testing.T) {
 	oldArgs := os.Args
 	oldExit := exitFunc
 	defer func() {
@@ -33,7 +33,7 @@ func TestMainSuccess(t *testing.T) {
 		exitFunc = oldExit
 	}()
 
-	exitFunc = func(code int) {}
+	exitFunc = func(_ int) {}
 
 	os.Args = []string{"diagram-gen", "--help"}
 	main()

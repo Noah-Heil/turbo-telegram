@@ -1,11 +1,12 @@
-package parser
+package archparser_test
 
 import (
+	"diagram-gen/internal/archparser"
 	"testing"
 )
 
 func TestParseFile(t *testing.T) {
-	p := New()
+	p := archparser.New()
 	diagram, err := p.ParseFile("testdata/sample.go")
 	if err != nil {
 		t.Fatalf("ParseFile failed: %v", err)

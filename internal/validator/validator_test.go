@@ -1,9 +1,10 @@
-package validator
+package validator_test
 
 import (
 	"testing"
 
 	"diagram-gen/internal/model"
+	"diagram-gen/internal/validator"
 )
 
 func TestValidateDiagram(t *testing.T) {
@@ -105,7 +106,7 @@ func TestValidateDiagram(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			err := ValidateDiagram(tt.diagram)
+			err := validator.ValidateDiagram(tt.diagram)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("ValidateDiagram() error = %v, wantErr %v", err, tt.wantErr)
 			}
@@ -133,7 +134,7 @@ func TestValidateComponentType(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(string(tt.componentType), func(t *testing.T) {
-			if got := ValidateComponentType(tt.componentType); got != tt.want {
+			if got := validator.ValidateComponentType(tt.componentType); got != tt.want {
 				t.Errorf("ValidateComponentType(%q) = %v, want %v", tt.componentType, got, tt.want)
 			}
 		})

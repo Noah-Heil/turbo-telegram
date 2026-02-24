@@ -1,0 +1,75 @@
+version: "2"
+
+run:
+  timeout: 1m
+  tests: true
+
+linters:
+  # Use a strong but sane baseline
+  default: standard
+
+  enable:
+    # Concurrency / correctness
+    - govet
+    - staticcheck
+    - errcheck
+    - ineffassign
+    - gocritic
+    - contextcheck
+
+    # Test hygiene
+    # - paralleltest
+    - tparallel
+    - testpackage
+
+    # API / error design
+    - errorlint
+    - wrapcheck
+
+    # Maintainability
+    - revive
+    - unconvert
+    - unused
+
+    # Struct / JSON sanity
+    # - exhaustruct
+    # - gochecknoglobals
+
+linters-settings:
+  govet:
+    enable-all: true
+
+  errcheck:
+    check-type-assertions: true
+    check-blank: true
+
+  revive:
+    severity: warning
+    rules:
+      - name: exported
+      - name: package-comments
+      - name: unused-parameter
+      - name: indent-error-flow
+      - name: superfluous-else
+
+  paralleltest:
+    ignore-missing: false
+
+issues:
+  max-issues-per-linter: 0
+  max-same-issues: 0
+
+  exclude-rules:
+    # Allow globals in test files
+    - path: _test\.go
+      linters:
+        - gochecknoglobals
+
+    # Allow exhaustruct in tests (table-driven tests often partial)
+    - path: _test\.go
+      linters:
+        - exhaustruct
+
+output:
+  formats:
+    colored-line-number: {}

@@ -1,13 +1,14 @@
-package parser
+package archparser_test
 
 import (
+	"diagram-gen/internal/archparser"
 	"os"
 	"path/filepath"
 	"testing"
 )
 
 func TestParseDirectory(t *testing.T) {
-	p := New()
+	p := archparser.New()
 
 	dir := t.TempDir()
 
@@ -46,7 +47,7 @@ type Database struct {
 }
 
 func TestParse(t *testing.T) {
-	p := New()
+	p := archparser.New()
 
 	diagram, err := p.Parse("testdata/sample.go")
 	if err != nil {
@@ -59,7 +60,7 @@ func TestParse(t *testing.T) {
 }
 
 func TestParseDirectoryEmpty(t *testing.T) {
-	p := New()
+	p := archparser.New()
 
 	dir := t.TempDir()
 
@@ -70,7 +71,7 @@ func TestParseDirectoryEmpty(t *testing.T) {
 }
 
 func TestParseNonExistent(t *testing.T) {
-	p := New()
+	p := archparser.New()
 
 	_, err := p.Parse("nonexistent.go")
 	if err == nil {
@@ -107,31 +108,34 @@ func TestParseStructTag(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got := parseStructTag(tt.tagValue, tt.key)
+			got := archparser.ParseStructTag(tt.tagValue, tt.key)
 			if got != tt.want {
-				t.Errorf("parseStructTag() = %q, want %q", got, tt.want)
+				t.Errorf("ParseStructTag() = %q, want %q", got, tt.want)
 			}
 		})
 	}
 }
 
 func TestParseFileWithInvalidGo(t *testing.T) {
-	p := New()
+	p := archparser.New()
 
 	tmpFile := "/tmp/invalid.go"
-	os.WriteFile(tmpFile, []byte(`package main
+	err := os.WriteFile(tmpFile, []byte(`package main
 invalid code here
 `), 0644)
-	defer os.Remove(tmpFile)
+	if err != nil {
+		t.Fatalf("failed to write temp file: %v", err)
+	}
+	defer func() { _ = os.Remove(tmpFile) }()
 
-	_, err := p.ParseFile(tmpFile)
+	_, err = p.ParseFile(tmpFile)
 	if err == nil {
 		t.Error("expected error for invalid Go code")
 	}
 }
 
 func TestParseDirectoryWithInvalidFile(t *testing.T) {
-	p := New()
+	p := archparser.New()
 
 	dir := t.TempDir()
 
@@ -152,15 +156,18 @@ func TestParseDirectoryWithInvalidFile(t *testing.T) {
 }
 
 func TestParseFileWithInvalidAnnotation(t *testing.T) {
-	p := New()
+	p := archparser.New()
 
 	tmpFile := "/tmp/invalid_anno.go"
-	os.WriteFile(tmpFile, []byte(`package main
+	err := os.WriteFile(tmpFile, []byte(`package main
 type S struct { 
 	F string `+"`"+`diagram:"invalid"`+"`"+` 
 }
 `), 0644)
-	defer os.Remove(tmpFile)
+	if err != nil {
+		t.Fatalf("failed to write temp file: %v", err)
+	}
+	defer func() { _ = os.Remove(tmpFile) }()
 
 	diagram, err := p.ParseFile(tmpFile)
 	if err != nil {
@@ -173,15 +180,18 @@ type S struct {
 }
 
 func TestParseFileWithNonStruct(t *testing.T) {
-	p := New()
+	p := archparser.New()
 
 	tmpFile := "/tmp/interface.go"
-	os.WriteFile(tmpFile, []byte(`package main
+	err := os.WriteFile(tmpFile, []byte(`package main
 type MyInterface interface {
 	Method() error
 }
 `), 0644)
-	defer os.Remove(tmpFile)
+	if err != nil {
+		t.Fatalf("failed to write temp file: %v", err)
+	}
+	defer func() { _ = os.Remove(tmpFile) }()
 
 	diagram, err := p.ParseFile(tmpFile)
 	if err != nil {
@@ -194,13 +204,16 @@ type MyInterface interface {
 }
 
 func TestParseFileWithNoFields(t *testing.T) {
-	p := New()
+	p := archparser.New()
 
 	tmpFile := "/tmp/empty.go"
-	os.WriteFile(tmpFile, []byte(`package main
+	err := os.WriteFile(tmpFile, []byte(`package main
 type Empty struct {}
 `), 0644)
-	defer os.Remove(tmpFile)
+	if err != nil {
+		t.Fatalf("failed to write temp file: %v", err)
+	}
+	defer func() { _ = os.Remove(tmpFile) }()
 
 	diagram, err := p.ParseFile(tmpFile)
 	if err != nil {
@@ -213,12 +226,15 @@ type Empty struct {}
 }
 
 func TestParseDirectoryWithOnlySubdirs(t *testing.T) {
-	p := New()
+	p := archparser.New()
 
 	dir := t.TempDir()
 	subdir := dir + "/subdir"
-	os.Mkdir(subdir, 0755)
-	defer os.RemoveAll(dir)
+	err := os.Mkdir(subdir, 0755)
+	if err != nil {
+		t.Fatalf("failed to create subdir: %v", err)
+	}
+	defer func() { _ = os.RemoveAll(dir) }()
 
 	diagram, err := p.ParseDirectory(dir)
 	if err != nil {
@@ -231,7 +247,7 @@ func TestParseDirectoryWithOnlySubdirs(t *testing.T) {
 }
 
 func TestParseDirectoryReadError(t *testing.T) {
-	p := New()
+	p := archparser.New()
 
 	dir := "/nonexistent_dir_12345"
 	_, err := p.ParseDirectory(dir)
@@ -241,13 +257,16 @@ func TestParseDirectoryReadError(t *testing.T) {
 }
 
 func TestParseWithFile(t *testing.T) {
-	p := New()
+	p := archparser.New()
 
 	tmpFile := "/tmp/test_parse_file.go"
-	os.WriteFile(tmpFile, []byte(`package main
+	err := os.WriteFile(tmpFile, []byte(`package main
 type S struct { F string `+"`"+`diagram:"type=service,name=S"`+"`"+` }
 `), 0644)
-	defer os.Remove(tmpFile)
+	if err != nil {
+		t.Fatalf("failed to write temp file: %v", err)
+	}
+	defer func() { _ = os.Remove(tmpFile) }()
 
 	diagram, err := p.Parse(tmpFile)
 	if err != nil {
@@ -260,13 +279,16 @@ type S struct { F string `+"`"+`diagram:"type=service,name=S"`+"`"+` }
 }
 
 func TestParseWithDirectory(t *testing.T) {
-	p := New()
+	p := archparser.New()
 
 	dir := t.TempDir()
-	os.WriteFile(dir+"/a.go", []byte(`package main
+	err := os.WriteFile(dir+"/a.go", []byte(`package main
 type S struct { F string `+"`"+`diagram:"type=service,name=S"`+"`"+` }
 `), 0644)
-	defer os.RemoveAll(dir)
+	if err != nil {
+		t.Fatalf("failed to write temp file: %v", err)
+	}
+	defer func() { _ = os.RemoveAll(dir) }()
 
 	diagram, err := p.Parse(dir)
 	if err != nil {
@@ -279,16 +301,19 @@ type S struct { F string `+"`"+`diagram:"type=service,name=S"`+"`"+` }
 }
 
 func TestParseFileWithMultipleFields(t *testing.T) {
-	p := New()
+	p := archparser.New()
 
 	tmpFile := "/tmp/multi_field.go"
-	os.WriteFile(tmpFile, []byte(`package main
+	err := os.WriteFile(tmpFile, []byte(`package main
 type UserService struct {
 	Field1 string `+"`"+`diagram:"type=service,name=UserService"`+"`"+`
 	Field2 string `+"`"+`diagram:"type=database,name=UserDB"`+"`"+`
 }
 `), 0644)
-	defer os.Remove(tmpFile)
+	if err != nil {
+		t.Fatalf("failed to write temp file: %v", err)
+	}
+	defer func() { _ = os.Remove(tmpFile) }()
 
 	diagram, err := p.ParseFile(tmpFile)
 	if err != nil {
@@ -301,16 +326,19 @@ type UserService struct {
 }
 
 func TestParseFileWithFieldWithoutTag(t *testing.T) {
-	p := New()
+	p := archparser.New()
 
 	tmpFile := "/tmp/mixed.go"
-	os.WriteFile(tmpFile, []byte(`package main
+	err := os.WriteFile(tmpFile, []byte(`package main
 type S struct {
 	Field1 string `+"`"+`diagram:"type=service,name=S"`+"`"+`
 	Field2 string
 }
 `), 0644)
-	defer os.Remove(tmpFile)
+	if err != nil {
+		t.Fatalf("failed to write temp file: %v", err)
+	}
+	defer func() { _ = os.Remove(tmpFile) }()
 
 	diagram, err := p.ParseFile(tmpFile)
 	if err != nil {
@@ -323,7 +351,7 @@ type S struct {
 }
 
 func TestParseFileWithEmptyDiagramTag(t *testing.T) {
-	p := New()
+	p := archparser.New()
 
 	tmpFile := "/tmp/empty_tag.go"
 	backtick := string(rune(96))
@@ -331,8 +359,11 @@ func TestParseFileWithEmptyDiagramTag(t *testing.T) {
 		"type S struct {\n" +
 		"\tField1 string " + backtick + "diagram:\"\"" + backtick + "\n" +
 		"}\n"
-	os.WriteFile(tmpFile, []byte(content), 0644)
-	defer os.Remove(tmpFile)
+	err := os.WriteFile(tmpFile, []byte(content), 0644)
+	if err != nil {
+		t.Fatalf("failed to write temp file: %v", err)
+	}
+	defer func() { _ = os.Remove(tmpFile) }()
 
 	diagram, err := p.ParseFile(tmpFile)
 	if err != nil {
@@ -344,7 +375,7 @@ func TestParseFileWithEmptyDiagramTag(t *testing.T) {
 }
 
 func TestParseFileWithNonDiagramTag(t *testing.T) {
-	p := New()
+	p := archparser.New()
 
 	tmpFile := "/tmp/non_diagram_tag.go"
 	backtick := string(rune(96))
@@ -352,8 +383,11 @@ func TestParseFileWithNonDiagramTag(t *testing.T) {
 		"type S struct {\n" +
 		"\tField1 string " + backtick + "json:\"name\"" + backtick + "\n" +
 		"}\n"
-	os.WriteFile(tmpFile, []byte(content), 0644)
-	defer os.Remove(tmpFile)
+	err := os.WriteFile(tmpFile, []byte(content), 0644)
+	if err != nil {
+		t.Fatalf("failed to write temp file: %v", err)
+	}
+	defer func() { _ = os.Remove(tmpFile) }()
 
 	diagram, err := p.ParseFile(tmpFile)
 	if err != nil {

@@ -12,7 +12,7 @@ var versionCmd = &cobra.Command{
 	Use:   "version",
 	Short: "Print the version number of diagram-gen",
 	Long:  `All software has versions. This is diagram-gen's.`,
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(_ *cobra.Command, _ []string) {
 		fmt.Printf("diagram-gen version %s\n", version)
 	},
 }

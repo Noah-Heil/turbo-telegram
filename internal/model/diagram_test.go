@@ -1,18 +1,19 @@
-package model
+package model_test
 
 import (
+	"diagram-gen/internal/model"
 	"testing"
 )
 
 func TestDiagramAddComponent(t *testing.T) {
-	d := &Diagram{
-		Type:        DiagramTypeArchitecture,
-		Components:  []Component{},
-		Connections: []Connection{},
+	d := &model.Diagram{
+		Type:        model.DiagramTypeArchitecture,
+		Components:  []model.Component{},
+		Connections: []model.Connection{},
 	}
 
-	comp := Component{
-		Type: ComponentTypeService,
+	comp := model.Component{
+		Type: model.ComponentTypeService,
 		Name: "TestService",
 	}
 	d.AddComponent(comp)
@@ -26,13 +27,13 @@ func TestDiagramAddComponent(t *testing.T) {
 }
 
 func TestDiagramAddConnection(t *testing.T) {
-	d := &Diagram{
-		Type:        DiagramTypeArchitecture,
-		Components:  []Component{},
-		Connections: []Connection{},
+	d := &model.Diagram{
+		Type:        model.DiagramTypeArchitecture,
+		Components:  []model.Component{},
+		Connections: []model.Connection{},
 	}
 
-	conn := Connection{
+	conn := model.Connection{
 		Source: "ServiceA",
 		Target: "ServiceB",
 	}
@@ -47,19 +48,20 @@ func TestDiagramAddConnection(t *testing.T) {
 }
 
 func TestDiagramGetComponentByName(t *testing.T) {
-	d := &Diagram{
-		Type: DiagramTypeArchitecture,
-		Components: []Component{
-			{Type: ComponentTypeService, Name: "ServiceA"},
-			{Type: ComponentTypeDatabase, Name: "DatabaseA"},
+	d := &model.Diagram{
+		Type: model.DiagramTypeArchitecture,
+		Components: []model.Component{
+			{Type: model.ComponentTypeService, Name: "ServiceA"},
+			{Type: model.ComponentTypeDatabase, Name: "DatabaseA"},
 		},
 	}
 
 	comp := d.GetComponentByName("ServiceA")
 	if comp == nil {
 		t.Error("expected to find ServiceA")
+		return
 	}
-	if comp.Type != ComponentTypeService {
+	if comp.Type != model.ComponentTypeService {
 		t.Errorf("expected type service, got %s", comp.Type)
 	}
 
@@ -70,28 +72,28 @@ func TestDiagramGetComponentByName(t *testing.T) {
 }
 
 func TestDiagramTypes(t *testing.T) {
-	if DiagramTypeArchitecture != "architecture" {
-		t.Errorf("expected architecture, got %s", DiagramTypeArchitecture)
+	if model.DiagramTypeArchitecture != "architecture" {
+		t.Errorf("expected architecture, got %s", model.DiagramTypeArchitecture)
 	}
-	if DiagramTypeFlowchart != "flowchart" {
-		t.Errorf("expected flowchart, got %s", DiagramTypeFlowchart)
+	if model.DiagramTypeFlowchart != "flowchart" {
+		t.Errorf("expected flowchart, got %s", model.DiagramTypeFlowchart)
 	}
-	if DiagramTypeNetwork != "network" {
-		t.Errorf("expected network, got %s", DiagramTypeNetwork)
+	if model.DiagramTypeNetwork != "network" {
+		t.Errorf("expected network, got %s", model.DiagramTypeNetwork)
 	}
 }
 
 func TestComponentTypes(t *testing.T) {
-	types := []ComponentType{
-		ComponentTypeService,
-		ComponentTypeDatabase,
-		ComponentTypeQueue,
-		ComponentTypeCache,
-		ComponentTypeAPI,
-		ComponentTypeUser,
-		ComponentTypeExternal,
-		ComponentTypeStorage,
-		ComponentTypeGateway,
+	types := []model.ComponentType{
+		model.ComponentTypeService,
+		model.ComponentTypeDatabase,
+		model.ComponentTypeQueue,
+		model.ComponentTypeCache,
+		model.ComponentTypeAPI,
+		model.ComponentTypeUser,
+		model.ComponentTypeExternal,
+		model.ComponentTypeStorage,
+		model.ComponentTypeGateway,
 	}
 
 	expected := []string{

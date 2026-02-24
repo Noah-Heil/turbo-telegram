@@ -1,4 +1,4 @@
-package parser
+package archparser
 
 import (
 	"fmt"
@@ -12,16 +12,19 @@ import (
 	"diagram-gen/internal/model"
 )
 
+// Parser parses Go source files for diagram annotations.
 type Parser struct {
 	fset *token.FileSet
 }
 
+// New creates a new Parser.
 func New() *Parser {
 	return &Parser{
 		fset: token.NewFileSet(),
 	}
 }
 
+// ParseFile parses a single Go file for diagram annotations.
 func (p *Parser) ParseFile(path string) (*model.Diagram, error) {
 	f, err := parser.ParseFile(p.fset, path, nil, parser.ParseComments)
 	if err != nil {
@@ -50,7 +53,7 @@ func (p *Parser) ParseFile(path string) (*model.Diagram, error) {
 				continue
 			}
 
-			tag := parseStructTag(field.Tag.Value, "diagram")
+			tag := ParseStructTag(field.Tag.Value, "diagram")
 			if tag == "" {
 				continue
 			}
@@ -75,6 +78,7 @@ func (p *Parser) ParseFile(path string) (*model.Diagram, error) {
 	return diagram, nil
 }
 
+// ParseDirectory parses all Go files in a directory.
 func (p *Parser) ParseDirectory(dirPath string) (*model.Diagram, error) {
 	diagram := &model.Diagram{
 		Type:        model.DiagramTypeArchitecture,
@@ -105,6 +109,7 @@ func (p *Parser) ParseDirectory(dirPath string) (*model.Diagram, error) {
 	return diagram, nil
 }
 
+// Parse parses a file or directory for diagram annotations.
 func (p *Parser) Parse(inputPath string) (*model.Diagram, error) {
 	info, err := os.Stat(inputPath)
 	if err != nil {
@@ -118,7 +123,7 @@ func (p *Parser) Parse(inputPath string) (*model.Diagram, error) {
 	return p.ParseFile(inputPath)
 }
 
-func parseStructTag(tagValue, key string) string {
+func ParseStructTag(tagValue, key string) string {
 	tagValue = tagValue[1 : len(tagValue)-1]
 	tagValue = strings.ReplaceAll(tagValue, `\"`, `"`)
 
