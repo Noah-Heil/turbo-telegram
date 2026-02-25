@@ -31,6 +31,26 @@ func TestGridLayout(t *testing.T) {
 	}
 }
 
+func TestGridLayoutFiveComponents(t *testing.T) {
+	l := &layout.GridLayout{}
+	components := []model.Component{{Name: "A"}, {Name: "B"}, {Name: "C"}, {Name: "D"}, {Name: "E"}}
+
+	pos := l.Calculate(components, nil)
+	if len(pos) != 5 {
+		t.Errorf("Calculate() returned %d positions, want 5", len(pos))
+	}
+}
+
+func TestGridLayoutSevenComponents(t *testing.T) {
+	l := &layout.GridLayout{}
+	components := []model.Component{{Name: "A"}, {Name: "B"}, {Name: "C"}, {Name: "D"}, {Name: "E"}, {Name: "F"}, {Name: "G"}}
+
+	pos := l.Calculate(components, nil)
+	if len(pos) != 7 {
+		t.Errorf("Calculate() returned %d positions, want 7", len(pos))
+	}
+}
+
 func TestGridLayoutEmpty(t *testing.T) {
 	l := &layout.GridLayout{}
 	pos := l.Calculate(nil, nil)
@@ -107,6 +127,17 @@ func TestIsometricLayout(t *testing.T) {
 
 	if len(pos) != 3 {
 		t.Errorf("Calculate() returned %d positions, want 3", len(pos))
+	}
+}
+
+func TestIsometricLayoutUnknownConnections(t *testing.T) {
+	l := &layout.IsometricLayout{}
+	components := []model.Component{{Name: "A"}, {Name: "B"}}
+	connections := []model.Connection{{Source: "A", Target: "C"}, {Source: "X", Target: "B"}}
+
+	pos := l.Calculate(components, connections)
+	if len(pos) != 2 {
+		t.Errorf("Calculate() returned %d positions, want 2", len(pos))
 	}
 }
 

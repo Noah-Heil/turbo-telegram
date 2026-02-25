@@ -12,6 +12,7 @@ import (
 type DrawIOGenerator struct {
 	LayoutType string
 	Compress   bool
+	testMode   bool
 }
 
 // NewDrawIOGenerator creates a new DrawIOGenerator with default settings.
@@ -19,6 +20,15 @@ func NewDrawIOGenerator() *DrawIOGenerator {
 	return &DrawIOGenerator{
 		LayoutType: "layered",
 		Compress:   false,
+	}
+}
+
+// NewDrawIOGeneratorForTest creates a generator for testing with compression error simulation.
+func NewDrawIOGeneratorForTest() *DrawIOGenerator {
+	return &DrawIOGenerator{
+		LayoutType: "layered",
+		Compress:   true,
+		testMode:   true,
 	}
 }
 
@@ -57,7 +67,13 @@ func (g *DrawIOGenerator) Generate(diagram *model.Diagram) ([]byte, error) {
 `)
 		for _, page := range pages {
 			pageXML := g.GeneratePageXML(page, swimlanes, intPositions)
-			compressed, err := CompressXML([]byte(pageXML))
+			var compressed []byte
+			var err error
+			if g.testMode {
+				_, err = CompressXMLWithLevel([]byte(pageXML), 100)
+			} else {
+				compressed, err = CompressXML([]byte(pageXML))
+			}
 			if err != nil {
 				compressed = []byte(pageXML)
 			}

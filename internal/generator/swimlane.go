@@ -41,11 +41,9 @@ func BuildSwimlanes(components []model.Component, positions map[string]Position)
 		)
 	}
 
-	for name, sl := range swimlaneMap {
-		if len(sl.Children) == 0 {
-			delete(swimlaneMap, name)
-			continue
-		}
+	pruneEmptySwimlanes(swimlaneMap)
+
+	for _, sl := range swimlaneMap {
 
 		minX := positions[sl.Children[0]].X
 		maxX := minX
@@ -80,6 +78,14 @@ func BuildSwimlanes(components []model.Component, positions map[string]Position)
 	}
 
 	return result
+}
+
+func pruneEmptySwimlanes(swimlaneMap map[string]*Swimlane) {
+	for name, sl := range swimlaneMap {
+		if len(sl.Children) == 0 {
+			delete(swimlaneMap, name)
+		}
+	}
 }
 
 // GenerateSwimlaneXML generates XML for swimlane elements.

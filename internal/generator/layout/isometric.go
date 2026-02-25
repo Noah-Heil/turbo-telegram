@@ -69,18 +69,25 @@ func (l *IsometricLayout) Calculate(components []model.Component, connections []
 	}
 
 	if len(positions) == 0 {
-		for i, comp := range components {
-			isoX, isoY := IsoProject(
-				baseX+float64(i%3)*spacingX,
-				baseY+float64(i/3)*spacingY,
-			)
-			positions[comp.Name] = Position{
-				X: isoX,
-				Y: isoY,
-			}
-		}
+		positions = fallbackIsometricPositions(components, baseX, baseY, spacingX, spacingY)
 	}
 
 	_ = math.Max
+	return positions
+}
+
+func fallbackIsometricPositions(components []model.Component, baseX, baseY, spacingX, spacingY float64) map[string]Position {
+	positions := make(map[string]Position)
+	for i, comp := range components {
+		isoX, isoY := IsoProject(
+			baseX+float64(i%3)*spacingX,
+			baseY+float64(i/3)*spacingY,
+		)
+		positions[comp.Name] = Position{
+			X: isoX,
+			Y: isoY,
+		}
+	}
+
 	return positions
 }
