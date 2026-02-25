@@ -1,0 +1,1 @@
+  - If tests timeout try `go test -race -count=1 -timeout=1m ./...` if they continue to time out `go test -race -count=1 -timeout=30s ./... -v` 

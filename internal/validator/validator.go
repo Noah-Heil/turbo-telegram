@@ -1,3 +1,4 @@
+// Package validator provides validation for diagram models.
 package validator
 
 import (
@@ -18,6 +19,7 @@ var validComponentTypes = map[model.ComponentType]bool{
 	model.ComponentTypeGateway:  true,
 }
 
+// ValidateDiagram validates a diagram model.
 func ValidateDiagram(diagram *model.Diagram) error {
 	if diagram == nil {
 		return fmt.Errorf("diagram is nil")
@@ -57,6 +59,7 @@ func ValidateDiagram(diagram *model.Diagram) error {
 	return nil
 }
 
+// ValidateComponentType checks if a component type is valid.
 func ValidateComponentType(componentType model.ComponentType) bool {
 	return validComponentTypes[componentType]
 }

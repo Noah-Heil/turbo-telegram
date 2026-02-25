@@ -17,6 +17,7 @@ bin/
 coverage.*
 *.coverprofile
 profile.cov
+cov.html
 
 # Dependency directories (remove the comment below to include it)
 # vendor/
@@ -33,3 +34,4 @@ go.work.sum
 # .vscode/
 
 .opencode/
+

@@ -32,13 +32,19 @@ go build -o bin/diagram-gen
 go test ./...
 
 # Run tests with coverage
-go test -coverprofile=coverage.out ./...
+go test -coverprofile=c.out ./...
+
+# Run tests with coverage and tail
+go test -coverprofile=c.out ./... 2>&1 && go tool cover -func=c.out 2>&1 | tail -5
+
+# Run tests with coverage verbose and tail
+go test -v -coverprofile=c.out ./... 2>&1 && go tool cover -func=c.out 2>&1 | tail -5
 
 # Format code
 gofmt -w ./cmd ./internal ./main.go
 
 # Run linter
-golangci-lint run
+golangci-lint-v2 run
 
 # Run CLI
 go run . --help

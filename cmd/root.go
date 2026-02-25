@@ -1,7 +1,7 @@
 package cmd
 
 import (
-	"os"
+	"fmt"
 
 	"github.com/spf13/cobra"
 )
@@ -14,11 +14,10 @@ draw.io compatible diagrams. Supports architecture, flowchart, and
 network diagram types.`,
 }
 
-var exitFunc = os.Exit
-
+// Execute runs the root command.
 func Execute() error {
 	if err := rootCmd.Execute(); err != nil {
-		return err
+		return fmt.Errorf("failed to execute command: %w", err)
 	}
 	return nil
 }
