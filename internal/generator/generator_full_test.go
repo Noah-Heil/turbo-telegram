@@ -9,7 +9,14 @@ import (
 	"diagram-gen/internal/generator"
 	"diagram-gen/internal/generator/layout"
 	"diagram-gen/internal/model"
+	"diagram-gen/internal/testutil"
 )
+
+func lockCompression(t *testing.T) {
+	t.Helper()
+	testutil.LockGlobal()
+	t.Cleanup(testutil.UnlockGlobal)
+}
 
 func TestStyleString(t *testing.T) {
 	t.Parallel()
@@ -311,6 +318,7 @@ func containsAt(s, substr string) bool {
 
 func TestCompressXML(t *testing.T) {
 	t.Parallel()
+	lockCompression(t)
 	xml := []byte(`<mxfile><diagram>test</diagram></mxfile>`)
 
 	compressed, err := generator.CompressXML(xml)
@@ -325,6 +333,7 @@ func TestCompressXML(t *testing.T) {
 
 func TestCompressAndEncode(t *testing.T) {
 	t.Parallel()
+	lockCompression(t)
 	xml := []byte(`<mxfile><diagram>test</diagram></mxfile>`)
 
 	encoded, err := generator.CompressAndEncode(xml)
@@ -827,6 +836,7 @@ func TestIsometricLayoutWithNoConnections(t *testing.T) {
 
 func TestCompressXMLWriter(t *testing.T) {
 	t.Parallel()
+	lockCompression(t)
 	xml := []byte(`<mxfile><diagram>test</diagram></mxfile>`)
 
 	var buf bytes.Buffer
@@ -1027,6 +1037,7 @@ func TestGridLayoutVariousSizes(t *testing.T) {
 
 func TestCompressXMLError(t *testing.T) {
 	t.Parallel()
+	lockCompression(t)
 	largeData := make([]byte, 1024*1024)
 	for i := range largeData {
 		largeData[i] = byte(i % 256)
@@ -1058,6 +1069,7 @@ func (e *errorWriteCloser) Close() error {
 
 func TestCompressXMLWriteError(t *testing.T) {
 	t.Parallel()
+	lockCompression(t)
 	xml := []byte(`<mxfile><diagram>test</diagram></mxfile>`)
 	writer := &errorWriteCloser{}
 	err := generator.CompressXMLWriter(xml, writer)
@@ -1068,6 +1080,7 @@ func TestCompressXMLWriteError(t *testing.T) {
 
 func TestCompressAndEncodeLargeData(t *testing.T) {
 	t.Parallel()
+	lockCompression(t)
 	largeData := make([]byte, 1024*1024)
 	for i := range largeData {
 		largeData[i] = byte(i % 256)
@@ -2122,6 +2135,7 @@ func TestBuildSwimlanesPositionsEdge(t *testing.T) {
 
 func TestCompressXMLEmpty(t *testing.T) {
 	t.Parallel()
+	lockCompression(t)
 	compressed, err := generator.CompressXML([]byte{})
 	if err != nil {
 		t.Fatalf("CompressXML failed: %v", err)
@@ -2133,6 +2147,7 @@ func TestCompressXMLEmpty(t *testing.T) {
 
 func TestCompressXMLWithInvalidLevel(t *testing.T) {
 	t.Parallel()
+	lockCompression(t)
 	xml := []byte(`<mxfile><diagram>test</diagram></mxfile>`)
 	_, err := generator.CompressXMLWithLevel(xml, 100)
 	if err == nil {
@@ -2142,6 +2157,7 @@ func TestCompressXMLWithInvalidLevel(t *testing.T) {
 
 func TestCompressAndEncodeWithInvalidLevel(t *testing.T) {
 	t.Parallel()
+	lockCompression(t)
 	xml := []byte(`<mxfile><diagram>test</diagram></mxfile>`)
 	_, err := generator.CompressAndEncodeWithLevel(xml, 100)
 	if err == nil {
@@ -2151,6 +2167,7 @@ func TestCompressAndEncodeWithInvalidLevel(t *testing.T) {
 
 func TestCompressXMLWithValidLevels(t *testing.T) {
 	t.Parallel()
+	lockCompression(t)
 	xml := []byte(`<mxfile><diagram>test</diagram></mxfile>`)
 
 	levels := []int{-1, 1, 9, 0, 2}
@@ -2168,6 +2185,7 @@ func TestCompressXMLWithValidLevels(t *testing.T) {
 
 func TestCompressAndEncodeWithValidLevels(t *testing.T) {
 	t.Parallel()
+	lockCompression(t)
 	xml := []byte(`<mxfile><diagram>test</diagram></mxfile>`)
 
 	levels := []int{-1, 1, 9, 0, 2}

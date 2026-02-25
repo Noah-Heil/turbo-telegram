@@ -79,6 +79,39 @@ func TestParseAnnotationNewFields(t *testing.T) {
 	}
 }
 
+func TestParseAnnotationSemicolonInValue(t *testing.T) {
+	t.Parallel()
+
+	ann, err := archparser.ParseAnnotation(`name=Service,description=one;two,fillColor=#fff,strokeColor=#000`)
+	if err != nil {
+		t.Fatalf("ParseAnnotation error: %v", err)
+	}
+	if ann.Description != "one;two" {
+		t.Fatalf("Description = %q, want one;two", ann.Description)
+	}
+	if ann.Style != "fillColor=#fff;strokeColor=#000" {
+		t.Fatalf("Style = %q, want fillColor=#fff;strokeColor=#000", ann.Style)
+	}
+}
+
+func TestParseAnnotationEdgeArrows(t *testing.T) {
+	t.Parallel()
+
+	ann, err := archparser.ParseAnnotation(`name=Service,edgeStyle=elbowEdgeStyle,startArrow=block,endArrow=classic`)
+	if err != nil {
+		t.Fatalf("ParseAnnotation error: %v", err)
+	}
+	if ann.EdgeStyle != "elbowEdgeStyle" {
+		t.Fatalf("EdgeStyle = %q, want elbowEdgeStyle", ann.EdgeStyle)
+	}
+	if ann.StartArrow != "block" {
+		t.Fatalf("StartArrow = %q, want block", ann.StartArrow)
+	}
+	if ann.EndArrow != "classic" {
+		t.Fatalf("EndArrow = %q, want classic", ann.EndArrow)
+	}
+}
+
 func TestParseAnnotationInvalid(t *testing.T) {
 	t.Parallel()
 	tests := []struct {

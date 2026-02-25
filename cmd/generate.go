@@ -35,6 +35,25 @@ func newGeneratorWithFlags() generator.Formatter {
 
 var newGenerator = newGeneratorWithFlags
 
+// SetGeneratorFactory overrides the generator factory used by the generate command.
+func SetGeneratorFactory(factory func() generator.Formatter) {
+	if factory == nil {
+		newGenerator = newGeneratorWithFlags
+		return
+	}
+	newGenerator = factory
+}
+
+// RunGenerateForTest executes the generate command with the provided args.
+func RunGenerateForTest(args []string) error {
+	cmd := buildGenerateCmd()
+	cmd.SetArgs(args)
+	if err := cmd.Execute(); err != nil {
+		return fmt.Errorf("failed to execute generate: %w", err)
+	}
+	return nil
+}
+
 func buildGenerateCmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "generate [file or directory]",

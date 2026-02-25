@@ -5,10 +5,13 @@ import (
 	"testing"
 
 	"diagram-gen/cmd"
+	"diagram-gen/internal/testutil"
 )
 
 func TestMainExit(t *testing.T) {
 	t.Parallel()
+	testutil.LockCLI()
+	defer testutil.UnlockCLI()
 	oldArgs := os.Args
 	oldExit := exitFunc
 	defer func() {
@@ -28,6 +31,8 @@ func TestMainExit(t *testing.T) {
 
 func TestMainSuccess(t *testing.T) {
 	t.Parallel()
+	testutil.LockCLI()
+	defer testutil.UnlockCLI()
 	oldArgs := os.Args
 	oldExit := exitFunc
 	defer func() {
@@ -43,6 +48,8 @@ func TestMainSuccess(t *testing.T) {
 
 func TestCmdExecute(t *testing.T) {
 	t.Parallel()
+	testutil.LockCLI()
+	defer testutil.UnlockCLI()
 	oldArgs := os.Args
 	defer func() { os.Args = oldArgs }()
 
