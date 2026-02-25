@@ -8,6 +8,7 @@ import (
 )
 
 func TestMainExit(t *testing.T) {
+	t.Parallel()
 	oldArgs := os.Args
 	oldExit := exitFunc
 	defer func() {
@@ -25,7 +26,8 @@ func TestMainExit(t *testing.T) {
 	}
 }
 
-func TestMainSuccess(_ *testing.T) {
+func TestMainSuccess(t *testing.T) {
+	t.Parallel()
 	oldArgs := os.Args
 	oldExit := exitFunc
 	defer func() {
@@ -40,6 +42,7 @@ func TestMainSuccess(_ *testing.T) {
 }
 
 func TestCmdExecute(t *testing.T) {
+	t.Parallel()
 	oldArgs := os.Args
 	defer func() { os.Args = oldArgs }()
 

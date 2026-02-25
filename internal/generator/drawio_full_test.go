@@ -10,6 +10,7 @@ import (
 )
 
 func TestGetEdgeStyle(t *testing.T) {
+	t.Parallel()
 	tests := []struct {
 		direction model.ConnectionDirection
 		want      string
@@ -21,6 +22,7 @@ func TestGetEdgeStyle(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(string(tt.direction), func(t *testing.T) {
+			t.Parallel()
 			conn := model.Connection{Source: "A", Target: "B", Direction: tt.direction}
 			g := &generator.DrawIOGenerator{}
 			got := g.BuildEdgeStyle(conn)
@@ -32,6 +34,7 @@ func TestGetEdgeStyle(t *testing.T) {
 }
 
 func TestCalculateLayout(t *testing.T) {
+	t.Parallel()
 	tests := []struct {
 		name       string
 		components []model.Component
@@ -67,6 +70,7 @@ func TestCalculateLayout(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
 			layoutEngine := layout.NewLayout("grid")
 			posMap := layoutEngine.Calculate(tt.components, nil)
 			if len(posMap) != len(tt.components) {
@@ -82,6 +86,7 @@ func TestCalculateLayout(t *testing.T) {
 }
 
 func TestEscapeXML(t *testing.T) {
+	t.Parallel()
 	tests := []struct {
 		input    string
 		expected string
@@ -95,6 +100,7 @@ func TestEscapeXML(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.input, func(t *testing.T) {
+			t.Parallel()
 			got := generator.EscapeXML(tt.input)
 			if got != tt.expected {
 				t.Errorf("EscapeXML(%q) = %q, want %q", tt.input, got, tt.expected)
@@ -104,6 +110,7 @@ func TestEscapeXML(t *testing.T) {
 }
 
 func TestGenerateWithManyComponents(t *testing.T) {
+	t.Parallel()
 	gen := generator.NewDrawIOGenerator()
 
 	components := make([]model.Component, 20)
@@ -135,6 +142,7 @@ func TestGenerateWithManyComponents(t *testing.T) {
 }
 
 func TestGenerateWithConnections(t *testing.T) {
+	t.Parallel()
 	gen := generator.NewDrawIOGenerator()
 
 	diagram := &model.Diagram{
@@ -163,6 +171,7 @@ func TestGenerateWithConnections(t *testing.T) {
 }
 
 func TestGenerateEmptyDiagram(t *testing.T) {
+	t.Parallel()
 	gen := generator.NewDrawIOGenerator()
 
 	diagram := &model.Diagram{
@@ -178,6 +187,7 @@ func TestGenerateEmptyDiagram(t *testing.T) {
 }
 
 func TestGenerateMultipleComponentTypes(t *testing.T) {
+	t.Parallel()
 	gen := generator.NewDrawIOGenerator()
 
 	diagram := &model.Diagram{
@@ -210,6 +220,7 @@ func TestGenerateMultipleComponentTypes(t *testing.T) {
 }
 
 func TestGenerateWithInvalidConnection(t *testing.T) {
+	t.Parallel()
 	gen := generator.NewDrawIOGenerator()
 
 	diagram := &model.Diagram{
@@ -235,6 +246,7 @@ func TestGenerateWithInvalidConnection(t *testing.T) {
 }
 
 func TestCalculateLayoutEdgeCases(t *testing.T) {
+	t.Parallel()
 	components := []model.Component{
 		{Type: model.ComponentTypeService, Name: "S1"},
 		{Type: model.ComponentTypeService, Name: "S2"},

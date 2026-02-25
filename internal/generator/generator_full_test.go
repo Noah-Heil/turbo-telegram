@@ -12,6 +12,7 @@ import (
 )
 
 func TestStyleString(t *testing.T) {
+	t.Parallel()
 	tests := []struct {
 		name     string
 		style    generator.Style
@@ -86,6 +87,7 @@ func TestStyleString(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
 			got := tt.style.String()
 			if got != tt.expected {
 				t.Errorf("generator.Style.String() = %q, want %q", got, tt.expected)
@@ -95,6 +97,7 @@ func TestStyleString(t *testing.T) {
 }
 
 func TestParseStyle(t *testing.T) {
+	t.Parallel()
 	tests := []struct {
 		name          string
 		styleStr      string
@@ -136,6 +139,7 @@ func TestParseStyle(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
 			got := generator.ParseStyle(tt.styleStr)
 			if got.FillColor != tt.wantFillColor {
 				t.Errorf("FillColor = %q, want %q", got.FillColor, tt.wantFillColor)
@@ -151,6 +155,7 @@ func TestParseStyle(t *testing.T) {
 }
 
 func TestMergeStyles(t *testing.T) {
+	t.Parallel()
 	base := generator.Style{
 		FillColor:   "#ffffff",
 		StrokeColor: "#000000",
@@ -180,6 +185,7 @@ func TestMergeStyles(t *testing.T) {
 }
 
 func TestShapeTypeIsIsometric(t *testing.T) {
+	t.Parallel()
 	tests := []struct {
 		shape    generator.ShapeType
 		expected bool
@@ -198,6 +204,7 @@ func TestShapeTypeIsIsometric(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(string(tt.shape), func(t *testing.T) {
+			t.Parallel()
 			got := tt.shape.IsIsometric()
 			if got != tt.expected {
 				t.Errorf("IsIsometric() = %v, want %v", got, tt.expected)
@@ -207,6 +214,7 @@ func TestShapeTypeIsIsometric(t *testing.T) {
 }
 
 func TestShapeTypeIsBasic(t *testing.T) {
+	t.Parallel()
 	tests := []struct {
 		shape    generator.ShapeType
 		expected bool
@@ -229,6 +237,7 @@ func TestShapeTypeIsBasic(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(string(tt.shape), func(t *testing.T) {
+			t.Parallel()
 			got := tt.shape.IsBasic()
 			if got != tt.expected {
 				t.Errorf("IsBasic() = %v, want %v", got, tt.expected)
@@ -238,6 +247,7 @@ func TestShapeTypeIsBasic(t *testing.T) {
 }
 
 func TestSwimlaneBuild(t *testing.T) {
+	t.Parallel()
 	components := []model.Component{
 		{Name: "Service1", Swimlane: "AWS"},
 		{Name: "Service2", Swimlane: "AWS"},
@@ -268,6 +278,7 @@ func TestSwimlaneBuild(t *testing.T) {
 }
 
 func TestSwimlaneGenerateXML(t *testing.T) {
+	t.Parallel()
 	swimlanes := []generator.Swimlane{
 		{Name: "AWS", X: 50, Y: 50, Width: 300, Height: 200},
 	}
@@ -299,6 +310,7 @@ func containsAt(s, substr string) bool {
 }
 
 func TestCompressXML(t *testing.T) {
+	t.Parallel()
 	xml := []byte(`<mxfile><diagram>test</diagram></mxfile>`)
 
 	compressed, err := generator.CompressXML(xml)
@@ -312,6 +324,7 @@ func TestCompressXML(t *testing.T) {
 }
 
 func TestCompressAndEncode(t *testing.T) {
+	t.Parallel()
 	xml := []byte(`<mxfile><diagram>test</diagram></mxfile>`)
 
 	encoded, err := generator.CompressAndEncode(xml)
@@ -325,6 +338,7 @@ func TestCompressAndEncode(t *testing.T) {
 }
 
 func TestGetShapeStyle(t *testing.T) {
+	t.Parallel()
 	tests := []struct {
 		shape    generator.ShapeType
 		expected string
@@ -356,6 +370,7 @@ func TestGetShapeStyle(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(string(tt.shape), func(t *testing.T) {
+			t.Parallel()
 			got := generator.GetShapeStyle(tt.shape)
 			if len(got) < len(tt.expected) || got[:len(tt.expected)] != tt.expected {
 				t.Errorf("GetShapeStyle(%q) = %q, want prefix %q", tt.shape, got, tt.expected)
@@ -365,6 +380,7 @@ func TestGetShapeStyle(t *testing.T) {
 }
 
 func TestGetDefaultShapeForComponentType(t *testing.T) {
+	t.Parallel()
 	tests := []struct {
 		compType string
 		expected generator.ShapeType
@@ -390,6 +406,7 @@ func TestGetDefaultShapeForComponentType(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.compType, func(t *testing.T) {
+			t.Parallel()
 			got := generator.GetDefaultShapeForComponentType(tt.compType)
 			if got != tt.expected {
 				t.Errorf("GetDefaultShapeForComponentType(%q) = %q, want %q", tt.compType, got, tt.expected)
@@ -399,6 +416,7 @@ func TestGetDefaultShapeForComponentType(t *testing.T) {
 }
 
 func TestParseStyleOpacity(t *testing.T) {
+	t.Parallel()
 	style := generator.ParseStyle("opacity=50")
 	if style.Opacity != 50 {
 		t.Errorf("Opacity = %d, want 50", style.Opacity)
@@ -406,6 +424,7 @@ func TestParseStyleOpacity(t *testing.T) {
 }
 
 func TestParseStyleStrokeWidth(t *testing.T) {
+	t.Parallel()
 	style := generator.ParseStyle("strokeWidth=3")
 	if style.StrokeWidth != 3 {
 		t.Errorf("StrokeWidth = %d, want 3", style.StrokeWidth)
@@ -413,6 +432,7 @@ func TestParseStyleStrokeWidth(t *testing.T) {
 }
 
 func TestParseStyleFontFamily(t *testing.T) {
+	t.Parallel()
 	style := generator.ParseStyle("fontFamily=Arial")
 	if style.FontFamily != "Arial" {
 		t.Errorf("FontFamily = %q, want Arial", style.FontFamily)
@@ -420,6 +440,7 @@ func TestParseStyleFontFamily(t *testing.T) {
 }
 
 func TestParseStyleFontStyle(t *testing.T) {
+	t.Parallel()
 	style := generator.ParseStyle("fontStyle=1")
 	if style.FontStyle != 1 {
 		t.Errorf("FontStyle = %d, want 1", style.FontStyle)
@@ -427,6 +448,7 @@ func TestParseStyleFontStyle(t *testing.T) {
 }
 
 func TestParseStyleImage(t *testing.T) {
+	t.Parallel()
 	style := generator.ParseStyle("image=https://example.com/image.png")
 	if style.Image != "https://example.com/image.png" {
 		t.Errorf("Image = %q, want https://example.com/image.png", style.Image)
@@ -445,6 +467,7 @@ func TestParseStyleImage(t *testing.T) {
 }
 
 func TestParseStyleEdgeAndArrow(t *testing.T) {
+	t.Parallel()
 	style := generator.ParseStyle("edgeStyle=orthogonalEdgeStyle;startArrow=block;endArrow=diamond")
 	if style.EdgeStyle != "orthogonalEdgeStyle" {
 		t.Errorf("EdgeStyle = %q, want orthogonalEdgeStyle", style.EdgeStyle)
@@ -458,6 +481,7 @@ func TestParseStyleEdgeAndArrow(t *testing.T) {
 }
 
 func TestParseStyleCurvedAndElbow(t *testing.T) {
+	t.Parallel()
 	style := generator.ParseStyle("curved=1;elbow=horizontal")
 	if !style.Curved {
 		t.Error("Curved should be true")
@@ -468,6 +492,7 @@ func TestParseStyleCurvedAndElbow(t *testing.T) {
 }
 
 func TestParseStyleWhiteSpace(t *testing.T) {
+	t.Parallel()
 	style := generator.ParseStyle("whiteSpace=wrap")
 	if style.WhiteSpace != "wrap" {
 		t.Errorf("WhiteSpace = %q, want wrap", style.WhiteSpace)
@@ -475,6 +500,7 @@ func TestParseStyleWhiteSpace(t *testing.T) {
 }
 
 func TestParseStyleAlign(t *testing.T) {
+	t.Parallel()
 	style := generator.ParseStyle("align=center;verticalAlign=bottom")
 	if style.Align != "center" {
 		t.Errorf("Align = %q, want center", style.Align)
@@ -485,6 +511,7 @@ func TestParseStyleAlign(t *testing.T) {
 }
 
 func TestMergeStylesOverrideAll(t *testing.T) {
+	t.Parallel()
 	base := generator.Style{
 		FillColor:   "#ffffff",
 		StrokeColor: "#000000",
@@ -516,6 +543,7 @@ func TestMergeStylesOverrideAll(t *testing.T) {
 }
 
 func TestSwimlaneEmptyComponents(t *testing.T) {
+	t.Parallel()
 	positions := map[string]generator.Position{
 		"Service1": {X: 100, Y: 100},
 	}
@@ -527,6 +555,7 @@ func TestSwimlaneEmptyComponents(t *testing.T) {
 }
 
 func TestSwimlaneNoSwimlane(t *testing.T) {
+	t.Parallel()
 	components := []model.Component{
 		{Name: "Service1", Swimlane: ""},
 		{Name: "Service2", Swimlane: ""},
@@ -544,6 +573,7 @@ func TestSwimlaneNoSwimlane(t *testing.T) {
 }
 
 func TestDrawIOGenerator(t *testing.T) {
+	t.Parallel()
 	gen := generator.NewDrawIOGenerator()
 	if gen.Format() != "drawio" {
 		t.Errorf("Format() = %q, want drawio", gen.Format())
@@ -551,6 +581,7 @@ func TestDrawIOGenerator(t *testing.T) {
 }
 
 func TestDrawIOGeneratorWithOptions(t *testing.T) {
+	t.Parallel()
 	gen := &generator.DrawIOGenerator{
 		LayoutType: "isometric",
 		Compress:   true,
@@ -565,6 +596,7 @@ func TestDrawIOGeneratorWithOptions(t *testing.T) {
 }
 
 func TestDrawIOGenerate(t *testing.T) {
+	t.Parallel()
 	gen := generator.NewDrawIOGenerator()
 	diagram := &model.Diagram{
 		Components: []model.Component{
@@ -586,6 +618,7 @@ func TestDrawIOGenerate(t *testing.T) {
 }
 
 func TestDrawIOGenerateWithLayout(t *testing.T) {
+	t.Parallel()
 	gen := generator.NewDrawIOGenerator()
 	diagram := &model.Diagram{
 		Components: []model.Component{
@@ -609,6 +642,7 @@ func TestDrawIOGenerateWithLayout(t *testing.T) {
 }
 
 func TestDrawIOGenerateWithCompress(t *testing.T) {
+	t.Parallel()
 	gen := generator.NewDrawIOGenerator()
 	diagram := &model.Diagram{
 		Components: []model.Component{
@@ -628,6 +662,7 @@ func TestDrawIOGenerateWithCompress(t *testing.T) {
 }
 
 func TestDrawIOBuildPages(t *testing.T) {
+	t.Parallel()
 	gen := generator.NewDrawIOGenerator()
 	diagram := &model.Diagram{
 		Components: []model.Component{
@@ -646,6 +681,7 @@ func TestDrawIOBuildPages(t *testing.T) {
 }
 
 func TestDrawIOBuildPagesDefault(t *testing.T) {
+	t.Parallel()
 	gen := generator.NewDrawIOGenerator()
 	diagram := &model.Diagram{
 		Components: []model.Component{
@@ -664,6 +700,7 @@ func TestDrawIOBuildPagesDefault(t *testing.T) {
 }
 
 func TestBuildComponentStyleWithShape(t *testing.T) {
+	t.Parallel()
 	gen := &generator.DrawIOGenerator{}
 	comp := model.Component{
 		Name:  "Test",
@@ -679,6 +716,7 @@ func TestBuildComponentStyleWithShape(t *testing.T) {
 }
 
 func TestBuildEdgeStyleWithOptions(t *testing.T) {
+	t.Parallel()
 	gen := &generator.DrawIOGenerator{}
 	conn := model.Connection{
 		Source:     "A",
@@ -696,6 +734,7 @@ func TestBuildEdgeStyleWithOptions(t *testing.T) {
 }
 
 func TestBuildSwimlanesMultiple(t *testing.T) {
+	t.Parallel()
 	components := []model.Component{
 		{Name: "S1", Swimlane: "AWS"},
 		{Name: "S2", Swimlane: "AWS"},
@@ -717,6 +756,7 @@ func TestBuildSwimlanesMultiple(t *testing.T) {
 }
 
 func TestMergeStylesEdgeCases(t *testing.T) {
+	t.Parallel()
 	base := generator.Style{
 		WhiteSpace:    "wrap",
 		Align:         "center",
@@ -746,6 +786,7 @@ func TestMergeStylesEdgeCases(t *testing.T) {
 }
 
 func TestGridLayoutWithManyComponents(t *testing.T) {
+	t.Parallel()
 	l := layout.NewLayout("grid")
 	components := make([]model.Component, 10)
 	for i := range components {
@@ -759,6 +800,7 @@ func TestGridLayoutWithManyComponents(t *testing.T) {
 }
 
 func TestLayeredLayoutWithNoConnections(t *testing.T) {
+	t.Parallel()
 	l := layout.NewLayout("layered")
 	components := []model.Component{
 		{Name: "A"}, {Name: "B"}, {Name: "C"},
@@ -771,6 +813,7 @@ func TestLayeredLayoutWithNoConnections(t *testing.T) {
 }
 
 func TestIsometricLayoutWithNoConnections(t *testing.T) {
+	t.Parallel()
 	l := layout.NewLayout("isometric")
 	components := []model.Component{
 		{Name: "A"}, {Name: "B"}, {Name: "C"},
@@ -783,6 +826,7 @@ func TestIsometricLayoutWithNoConnections(t *testing.T) {
 }
 
 func TestCompressXMLWriter(t *testing.T) {
+	t.Parallel()
 	xml := []byte(`<mxfile><diagram>test</diagram></mxfile>`)
 
 	var buf bytes.Buffer
@@ -797,6 +841,7 @@ func TestCompressXMLWriter(t *testing.T) {
 }
 
 func TestStyleStringFull(t *testing.T) {
+	t.Parallel()
 	style := generator.Style{
 		Shape:         "rectangle",
 		FillColor:     "#dae8fc",
@@ -829,6 +874,7 @@ func TestStyleStringFull(t *testing.T) {
 }
 
 func TestBuildSwimlanesEdgeCases(t *testing.T) {
+	t.Parallel()
 	components := []model.Component{
 		{Name: "S1", Swimlane: "AWS"},
 		{Name: "S2", Swimlane: "AWS"},
@@ -854,6 +900,7 @@ func TestBuildSwimlanesEdgeCases(t *testing.T) {
 }
 
 func TestDrawIOGenerateFull(t *testing.T) {
+	t.Parallel()
 	gen := generator.NewDrawIOGenerator()
 	diagram := &model.Diagram{
 		Components: []model.Component{
@@ -879,6 +926,7 @@ func TestDrawIOGenerateFull(t *testing.T) {
 }
 
 func TestDrawIOGenerateWithSwimlanes(t *testing.T) {
+	t.Parallel()
 	gen := generator.NewDrawIOGenerator()
 	diagram := &model.Diagram{
 		Components: []model.Component{
@@ -901,6 +949,7 @@ func TestDrawIOGenerateWithSwimlanes(t *testing.T) {
 }
 
 func TestDrawIOBuildPagesMultiple(t *testing.T) {
+	t.Parallel()
 	gen := generator.NewDrawIOGenerator()
 	diagram := &model.Diagram{
 		Components: []model.Component{
@@ -924,6 +973,7 @@ func TestDrawIOBuildPagesMultiple(t *testing.T) {
 }
 
 func TestDrawIOGeneratePageXML(t *testing.T) {
+	t.Parallel()
 	gen := generator.NewDrawIOGenerator()
 	page := model.Page{
 		Name: "Test",
@@ -942,6 +992,7 @@ func TestDrawIOGeneratePageXML(t *testing.T) {
 }
 
 func TestDrawIOGeneratePageXMLWithSwimlanes(t *testing.T) {
+	t.Parallel()
 	gen := generator.NewDrawIOGenerator()
 	swimlanes := []generator.Swimlane{{Name: "AWS", X: 50, Y: 50, Width: 300, Height: 200}}
 	page := model.Page{
@@ -958,6 +1009,7 @@ func TestDrawIOGeneratePageXMLWithSwimlanes(t *testing.T) {
 }
 
 func TestGridLayoutVariousSizes(t *testing.T) {
+	t.Parallel()
 	l := layout.NewLayout("grid")
 
 	tests := []int{1, 2, 3, 4, 5, 7, 10, 15}
@@ -974,6 +1026,7 @@ func TestGridLayoutVariousSizes(t *testing.T) {
 }
 
 func TestCompressXMLError(t *testing.T) {
+	t.Parallel()
 	largeData := make([]byte, 1024*1024)
 	for i := range largeData {
 		largeData[i] = byte(i % 256)
@@ -991,7 +1044,7 @@ func TestCompressXMLError(t *testing.T) {
 
 type errorWriter struct{}
 
-func (e *errorWriter) Write(p []byte) (n int, err error) {
+func (e *errorWriter) Write(_ []byte) (n int, err error) {
 	return 0, fmt.Errorf("write error")
 }
 
@@ -1004,6 +1057,7 @@ func (e *errorWriteCloser) Close() error {
 }
 
 func TestCompressXMLWriteError(t *testing.T) {
+	t.Parallel()
 	xml := []byte(`<mxfile><diagram>test</diagram></mxfile>`)
 	writer := &errorWriteCloser{}
 	err := generator.CompressXMLWriter(xml, writer)
@@ -1013,6 +1067,7 @@ func TestCompressXMLWriteError(t *testing.T) {
 }
 
 func TestCompressAndEncodeLargeData(t *testing.T) {
+	t.Parallel()
 	largeData := make([]byte, 1024*1024)
 	for i := range largeData {
 		largeData[i] = byte(i % 256)
@@ -1029,6 +1084,7 @@ func TestCompressAndEncodeLargeData(t *testing.T) {
 }
 
 func TestParseIntInvalid(t *testing.T) {
+	t.Parallel()
 	style := generator.ParseStyle("opacity=invalid")
 	if style.Opacity != 0 {
 		t.Errorf("Opacity = %d, want 0 for invalid value", style.Opacity)
@@ -1046,6 +1102,7 @@ func TestParseIntInvalid(t *testing.T) {
 }
 
 func TestStyleStringOpacity100(t *testing.T) {
+	t.Parallel()
 	style := generator.Style{
 		Opacity: 100,
 		Shape:   "rectangle",
@@ -1057,6 +1114,7 @@ func TestStyleStringOpacity100(t *testing.T) {
 }
 
 func TestParseStyleNoEquals(t *testing.T) {
+	t.Parallel()
 	style := generator.ParseStyle("invalidpart")
 	if style.Shape != "" {
 		t.Errorf("Shape = %q, want empty", style.Shape)
@@ -1072,6 +1130,7 @@ func TestParseStyleNoEquals(t *testing.T) {
 }
 
 func TestMergeStylesEmpty(t *testing.T) {
+	t.Parallel()
 	base := generator.Style{
 		FillColor: "#ffffff",
 	}
@@ -1084,6 +1143,7 @@ func TestMergeStylesEmpty(t *testing.T) {
 }
 
 func TestMergeStylesFont(t *testing.T) {
+	t.Parallel()
 	base := generator.Style{
 		FontFamily: "Arial",
 		FontColor:  "#000000",
@@ -1106,6 +1166,7 @@ func TestMergeStylesFont(t *testing.T) {
 }
 
 func TestMergeStylesEdgeArrow(t *testing.T) {
+	t.Parallel()
 	base := generator.Style{
 		Shadow:        true,
 		Glass:         false,
@@ -1140,6 +1201,7 @@ func TestMergeStylesEdgeArrow(t *testing.T) {
 }
 
 func TestSwimlaneBuildMissingPositions(t *testing.T) {
+	t.Parallel()
 	components := []model.Component{
 		{Name: "S1", Swimlane: "AWS"},
 		{Name: "S2", Swimlane: "AWS"},
@@ -1154,6 +1216,7 @@ func TestSwimlaneBuildMissingPositions(t *testing.T) {
 }
 
 func TestDrawIOBuildPagesNoComponentPage(t *testing.T) {
+	t.Parallel()
 	gen := generator.NewDrawIOGenerator()
 	diagram := &model.Diagram{
 		Components: []model.Component{
@@ -1171,6 +1234,7 @@ func TestDrawIOBuildPagesNoComponentPage(t *testing.T) {
 }
 
 func TestDrawIOGeneratePageXMLUnknownConnection(t *testing.T) {
+	t.Parallel()
 	gen := generator.NewDrawIOGenerator()
 	page := model.Page{
 		Name: "Test",
@@ -1189,6 +1253,7 @@ func TestDrawIOGeneratePageXMLUnknownConnection(t *testing.T) {
 }
 
 func TestDrawIOGenerateCompressError(t *testing.T) {
+	t.Parallel()
 	gen := generator.NewDrawIOGenerator()
 	diagram := &model.Diagram{
 		Components: []model.Component{
@@ -1208,6 +1273,7 @@ func TestDrawIOGenerateCompressError(t *testing.T) {
 }
 
 func TestDrawIOBuildPagesNoComponents(t *testing.T) {
+	t.Parallel()
 	gen := generator.NewDrawIOGenerator()
 	diagram := &model.Diagram{
 		Components: []model.Component{},
@@ -1223,6 +1289,7 @@ func TestDrawIOBuildPagesNoComponents(t *testing.T) {
 }
 
 func TestDrawIOBuildPagesConnectionsOnly(t *testing.T) {
+	t.Parallel()
 	gen := generator.NewDrawIOGenerator()
 	diagram := &model.Diagram{
 		Components: []model.Component{},
@@ -1239,6 +1306,7 @@ func TestDrawIOBuildPagesConnectionsOnly(t *testing.T) {
 }
 
 func TestDrawIOBuildPagesMixedPages(t *testing.T) {
+	t.Parallel()
 	gen := generator.NewDrawIOGenerator()
 	diagram := &model.Diagram{
 		Components: []model.Component{
@@ -1258,6 +1326,7 @@ func TestDrawIOBuildPagesMixedPages(t *testing.T) {
 }
 
 func TestGeneratePageXMLWithZeroPosition(t *testing.T) {
+	t.Parallel()
 	gen := generator.NewDrawIOGenerator()
 	page := model.Page{
 		Name: "Test",
@@ -1280,6 +1349,7 @@ func TestGeneratePageXMLWithZeroPosition(t *testing.T) {
 }
 
 func TestGeneratePageXMLWithConnections(t *testing.T) {
+	t.Parallel()
 	gen := generator.NewDrawIOGenerator()
 	page := model.Page{
 		Name: "Test",
@@ -1307,6 +1377,7 @@ func TestGeneratePageXMLWithConnections(t *testing.T) {
 }
 
 func TestGridLayoutEdgeCases(t *testing.T) {
+	t.Parallel()
 	l := layout.NewLayout("grid")
 
 	components := []model.Component{
@@ -1345,6 +1416,7 @@ func TestGridLayoutEdgeCases(t *testing.T) {
 }
 
 func TestIsometricLayoutWithConnections(t *testing.T) {
+	t.Parallel()
 	l := layout.NewLayout("isometric")
 	components := []model.Component{
 		{Name: "A"},
@@ -1373,6 +1445,7 @@ func TestIsometricLayoutWithConnections(t *testing.T) {
 }
 
 func TestIsometricLayoutManyComponents(t *testing.T) {
+	t.Parallel()
 	l := layout.NewLayout("isometric")
 	components := make([]model.Component, 20)
 	for i := range components {
@@ -1393,6 +1466,7 @@ func TestIsometricLayoutManyComponents(t *testing.T) {
 }
 
 func TestStyleStringEmpty(t *testing.T) {
+	t.Parallel()
 	style := generator.Style{}
 	got := style.String()
 	if got != "html=1" {
@@ -1401,6 +1475,7 @@ func TestStyleStringEmpty(t *testing.T) {
 }
 
 func TestParseStyleMultiple(t *testing.T) {
+	t.Parallel()
 	style := generator.ParseStyle("shape=rectangle;fillColor=#ffffff;strokeColor=#000000;strokeWidth=2;opacity=50;gradientColor=#cccccc;gradientDirection=north;fontSize=14;fontFamily=Arial;fontColor=#000000;fontStyle=1;rounded=1;dashed=1;dashPattern=5 5;shadow=1;glass=1;whiteSpace=wrap;align=center;verticalAlign=middle;image=test.png;imageWidth=100;imageHeight=200;imageAspect=1;edgeStyle=orthogonalEdgeStyle;startArrow=block;endArrow=classic;curved=1;elbow=horizontal;orthogonal=1")
 
 	if style.Shape != "rectangle" {
@@ -1493,6 +1568,7 @@ func TestParseStyleMultiple(t *testing.T) {
 }
 
 func TestMergeStylesAllFields(t *testing.T) {
+	t.Parallel()
 	base := generator.Style{
 		Shape:         "rectangle",
 		FillColor:     "#ffffff",
@@ -1599,6 +1675,7 @@ func TestMergeStylesAllFields(t *testing.T) {
 }
 
 func TestBuildSwimlanesAllPositions(t *testing.T) {
+	t.Parallel()
 	components := []model.Component{
 		{Name: "S1", Swimlane: "AWS"},
 		{Name: "S2", Swimlane: "AWS"},
@@ -1622,6 +1699,7 @@ func TestBuildSwimlanesAllPositions(t *testing.T) {
 }
 
 func TestDrawIOGenerateWithCompressFallback(t *testing.T) {
+	t.Parallel()
 	gen := generator.NewDrawIOGeneratorForTest()
 	diagram := &model.Diagram{
 		Components: []model.Component{
@@ -1646,6 +1724,7 @@ func TestDrawIOGenerateWithCompressFallback(t *testing.T) {
 }
 
 func TestBuildPagesWithEmptyDiagram(t *testing.T) {
+	t.Parallel()
 	gen := generator.NewDrawIOGenerator()
 	diagram := &model.Diagram{
 		Components:  []model.Component{},
@@ -1659,6 +1738,7 @@ func TestBuildPagesWithEmptyDiagram(t *testing.T) {
 }
 
 func TestBuildPagesWithPagesInModel(t *testing.T) {
+	t.Parallel()
 	gen := generator.NewDrawIOGenerator()
 	diagram := &model.Diagram{
 		Pages: []model.Page{
@@ -1674,6 +1754,7 @@ func TestBuildPagesWithPagesInModel(t *testing.T) {
 }
 
 func TestGeneratePageXMLNoSwimlane(t *testing.T) {
+	t.Parallel()
 	gen := generator.NewDrawIOGenerator()
 	page := model.Page{
 		Name: "Test",
@@ -1690,6 +1771,7 @@ func TestGeneratePageXMLNoSwimlane(t *testing.T) {
 }
 
 func TestGeneratePageXMLWithSwimlaneParent(t *testing.T) {
+	t.Parallel()
 	gen := generator.NewDrawIOGenerator()
 	swimlanes := []generator.Swimlane{
 		{Name: "AWS", X: 50, Y: 50, Width: 300, Height: 200},
@@ -1709,6 +1791,7 @@ func TestGeneratePageXMLWithSwimlaneParent(t *testing.T) {
 }
 
 func TestGridLayoutWith5Components(t *testing.T) {
+	t.Parallel()
 	l := layout.NewLayout("grid")
 	components := []model.Component{
 		{Name: "A"},
@@ -1725,6 +1808,7 @@ func TestGridLayoutWith5Components(t *testing.T) {
 }
 
 func TestGridLayoutWith6Components(t *testing.T) {
+	t.Parallel()
 	l := layout.NewLayout("grid")
 	components := []model.Component{
 		{Name: "A"},
@@ -1742,6 +1826,7 @@ func TestGridLayoutWith6Components(t *testing.T) {
 }
 
 func TestGridLayoutWith7Components(t *testing.T) {
+	t.Parallel()
 	l := layout.NewLayout("grid")
 	components := []model.Component{
 		{Name: "A"},
@@ -1760,6 +1845,7 @@ func TestGridLayoutWith7Components(t *testing.T) {
 }
 
 func TestGridLayoutWith8Components(t *testing.T) {
+	t.Parallel()
 	l := layout.NewLayout("grid")
 	components := []model.Component{
 		{Name: "A"},
@@ -1779,6 +1865,7 @@ func TestGridLayoutWith8Components(t *testing.T) {
 }
 
 func TestGridLayoutWith1Component(t *testing.T) {
+	t.Parallel()
 	l := layout.NewLayout("grid")
 	components := []model.Component{
 		{Name: "A"},
@@ -1791,6 +1878,7 @@ func TestGridLayoutWith1Component(t *testing.T) {
 }
 
 func TestGridLayoutWith2Components(t *testing.T) {
+	t.Parallel()
 	l := layout.NewLayout("grid")
 	components := []model.Component{
 		{Name: "A"},
@@ -1804,6 +1892,7 @@ func TestGridLayoutWith2Components(t *testing.T) {
 }
 
 func TestGridLayoutWith3Components(t *testing.T) {
+	t.Parallel()
 	l := layout.NewLayout("grid")
 	components := []model.Component{
 		{Name: "A"},
@@ -1818,6 +1907,7 @@ func TestGridLayoutWith3Components(t *testing.T) {
 }
 
 func TestGridLayoutWith4Components(t *testing.T) {
+	t.Parallel()
 	l := layout.NewLayout("grid")
 	components := []model.Component{
 		{Name: "A"},
@@ -1833,6 +1923,7 @@ func TestGridLayoutWith4Components(t *testing.T) {
 }
 
 func TestIsometricLayoutWithNoConnectionsAndNoLayers(t *testing.T) {
+	t.Parallel()
 	l := layout.NewLayout("isometric")
 	components := []model.Component{}
 
@@ -1843,6 +1934,7 @@ func TestIsometricLayoutWithNoConnectionsAndNoLayers(t *testing.T) {
 }
 
 func TestIsometricLayoutEmptyComponents(t *testing.T) {
+	t.Parallel()
 	l := layout.NewLayout("isometric")
 	components := []model.Component{}
 
@@ -1853,6 +1945,7 @@ func TestIsometricLayoutEmptyComponents(t *testing.T) {
 }
 
 func TestStyleStringGradientDirNoGradientColor(t *testing.T) {
+	t.Parallel()
 	style := generator.Style{
 		GradientDir: "north",
 	}
@@ -1863,6 +1956,7 @@ func TestStyleStringGradientDirNoGradientColor(t *testing.T) {
 }
 
 func TestStyleStringImageWithoutDimensions(t *testing.T) {
+	t.Parallel()
 	style := generator.Style{
 		Image: "data:image/svg+xml;base64,abc",
 	}
@@ -1876,6 +1970,7 @@ func TestStyleStringImageWithoutDimensions(t *testing.T) {
 }
 
 func TestStyleStringImageAspectOnly(t *testing.T) {
+	t.Parallel()
 	style := generator.Style{
 		Image:       "data:image/svg+xml;base64,abc",
 		ImageAspect: true,
@@ -1887,6 +1982,7 @@ func TestStyleStringImageAspectOnly(t *testing.T) {
 }
 
 func TestStyleStringEdgeOptions(t *testing.T) {
+	t.Parallel()
 	style := generator.Style{
 		Curved:     true,
 		Elbow:      "horizontal",
@@ -1905,6 +2001,7 @@ func TestStyleStringEdgeOptions(t *testing.T) {
 }
 
 func TestStyleStringGradientBoth(t *testing.T) {
+	t.Parallel()
 	style := generator.Style{
 		GradientColor: "#cccccc",
 		GradientDir:   "north",
@@ -1920,7 +2017,7 @@ func TestStyleStringGradientBoth(t *testing.T) {
 
 type failingWriter struct{}
 
-func (f *failingWriter) Write(p []byte) (n int, err error) {
+func (f *failingWriter) Write(_ []byte) (n int, err error) {
 	return 0, fmt.Errorf("write error")
 }
 
@@ -1933,6 +2030,7 @@ func (f *failingWriteCloser) Close() error {
 }
 
 func TestCompressXMLWithFailingWriter(t *testing.T) {
+	t.Parallel()
 	xml := []byte(`<mxfile><diagram>test</diagram></mxfile>`)
 	var buf failingWriter
 	err := generator.CompressXMLWriter(xml, &buf)
@@ -1942,6 +2040,7 @@ func TestCompressXMLWithFailingWriter(t *testing.T) {
 }
 
 func TestCompressXMLWithFailingCloser(t *testing.T) {
+	t.Parallel()
 	xml := []byte(`<mxfile><diagram>test</diagram></mxfile>`)
 	var buf failingWriteCloser
 	err := generator.CompressXMLWriter(xml, &buf)
@@ -1951,6 +2050,7 @@ func TestCompressXMLWithFailingCloser(t *testing.T) {
 }
 
 func TestStyleStringImageWidth(t *testing.T) {
+	t.Parallel()
 	style := generator.Style{
 		Image:      "test.png",
 		ImageWidth: 100,
@@ -1962,6 +2062,7 @@ func TestStyleStringImageWidth(t *testing.T) {
 }
 
 func TestStyleStringImageHeight(t *testing.T) {
+	t.Parallel()
 	style := generator.Style{
 		Image:       "test.png",
 		ImageHeight: 100,
@@ -1973,6 +2074,7 @@ func TestStyleStringImageHeight(t *testing.T) {
 }
 
 func TestGeneratePageXMLWithIsoShape(t *testing.T) {
+	t.Parallel()
 	gen := generator.NewDrawIOGenerator()
 	page := model.Page{
 		Name: "Test",
@@ -1995,6 +2097,7 @@ func TestGeneratePageXMLWithIsoShape(t *testing.T) {
 }
 
 func TestBuildSwimlanesPositionsEdge(t *testing.T) {
+	t.Parallel()
 	components := []model.Component{
 		{Name: "S1", Swimlane: "AWS"},
 		{Name: "S2", Swimlane: "AWS"},
@@ -2018,6 +2121,7 @@ func TestBuildSwimlanesPositionsEdge(t *testing.T) {
 }
 
 func TestCompressXMLEmpty(t *testing.T) {
+	t.Parallel()
 	compressed, err := generator.CompressXML([]byte{})
 	if err != nil {
 		t.Fatalf("CompressXML failed: %v", err)
@@ -2028,6 +2132,7 @@ func TestCompressXMLEmpty(t *testing.T) {
 }
 
 func TestCompressXMLWithInvalidLevel(t *testing.T) {
+	t.Parallel()
 	xml := []byte(`<mxfile><diagram>test</diagram></mxfile>`)
 	_, err := generator.CompressXMLWithLevel(xml, 100)
 	if err == nil {
@@ -2036,6 +2141,7 @@ func TestCompressXMLWithInvalidLevel(t *testing.T) {
 }
 
 func TestCompressAndEncodeWithInvalidLevel(t *testing.T) {
+	t.Parallel()
 	xml := []byte(`<mxfile><diagram>test</diagram></mxfile>`)
 	_, err := generator.CompressAndEncodeWithLevel(xml, 100)
 	if err == nil {
@@ -2044,6 +2150,7 @@ func TestCompressAndEncodeWithInvalidLevel(t *testing.T) {
 }
 
 func TestCompressXMLWithValidLevels(t *testing.T) {
+	t.Parallel()
 	xml := []byte(`<mxfile><diagram>test</diagram></mxfile>`)
 
 	levels := []int{-1, 1, 9, 0, 2}
@@ -2060,6 +2167,7 @@ func TestCompressXMLWithValidLevels(t *testing.T) {
 }
 
 func TestCompressAndEncodeWithValidLevels(t *testing.T) {
+	t.Parallel()
 	xml := []byte(`<mxfile><diagram>test</diagram></mxfile>`)
 
 	levels := []int{-1, 1, 9, 0, 2}

@@ -6,6 +6,7 @@ import (
 )
 
 func TestParseFile(t *testing.T) {
+	t.Parallel()
 	p := archparser.New()
 	diagram, err := p.ParseFile("testdata/sample.go")
 	if err != nil {

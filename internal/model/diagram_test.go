@@ -6,6 +6,7 @@ import (
 )
 
 func TestDiagramAddComponent(t *testing.T) {
+	t.Parallel()
 	d := &model.Diagram{
 		Type:        model.DiagramTypeArchitecture,
 		Components:  []model.Component{},
@@ -27,6 +28,7 @@ func TestDiagramAddComponent(t *testing.T) {
 }
 
 func TestDiagramAddConnection(t *testing.T) {
+	t.Parallel()
 	d := &model.Diagram{
 		Type:        model.DiagramTypeArchitecture,
 		Components:  []model.Component{},
@@ -48,6 +50,7 @@ func TestDiagramAddConnection(t *testing.T) {
 }
 
 func TestDiagramGetComponentByName(t *testing.T) {
+	t.Parallel()
 	d := &model.Diagram{
 		Type: model.DiagramTypeArchitecture,
 		Components: []model.Component{
@@ -72,6 +75,7 @@ func TestDiagramGetComponentByName(t *testing.T) {
 }
 
 func TestDiagramTypes(t *testing.T) {
+	t.Parallel()
 	if model.DiagramTypeArchitecture != "architecture" {
 		t.Errorf("expected architecture, got %s", model.DiagramTypeArchitecture)
 	}
@@ -84,6 +88,7 @@ func TestDiagramTypes(t *testing.T) {
 }
 
 func TestComponentTypes(t *testing.T) {
+	t.Parallel()
 	types := []model.ComponentType{
 		model.ComponentTypeService,
 		model.ComponentTypeDatabase,

@@ -11,7 +11,7 @@ import (
 
 type errWriter struct{}
 
-func (e errWriter) Write(p []byte) (int, error) {
+func (e errWriter) Write(_ []byte) (int, error) {
 	return 0, errors.New("write failed")
 }
 
@@ -28,6 +28,7 @@ func (c *closeFailWriter) Write(p []byte) (int, error) {
 }
 
 func TestCompressXMLWriterWriteError(t *testing.T) {
+	t.Parallel()
 	err := compressXMLToWriter([]byte("test"), errWriter{})
 	if err == nil {
 		t.Fatal("expected error from writer")
@@ -35,6 +36,7 @@ func TestCompressXMLWriterWriteError(t *testing.T) {
 }
 
 func TestCompressXMLWriterCloseError(t *testing.T) {
+	t.Parallel()
 	writer := &closeFailWriter{}
 	err := compressXMLToWriter([]byte("test"), writer)
 	if err == nil {
@@ -43,8 +45,9 @@ func TestCompressXMLWriterCloseError(t *testing.T) {
 }
 
 func TestCompressXMLWithLevelCreateError(t *testing.T) {
+	t.Parallel()
 	prev := newZlibWriterLevel
-	newZlibWriterLevel = func(w io.Writer, level int) (*zlib.Writer, error) {
+	newZlibWriterLevel = func(_ io.Writer, _ int) (*zlib.Writer, error) {
 		return nil, fmt.Errorf("create failed")
 	}
 	t.Cleanup(func() { newZlibWriterLevel = prev })
@@ -56,8 +59,9 @@ func TestCompressXMLWithLevelCreateError(t *testing.T) {
 }
 
 func TestCompressXMLCreateError(t *testing.T) {
+	t.Parallel()
 	prev := newZlibWriterLevel
-	newZlibWriterLevel = func(w io.Writer, level int) (*zlib.Writer, error) {
+	newZlibWriterLevel = func(_ io.Writer, _ int) (*zlib.Writer, error) {
 		return nil, fmt.Errorf("create failed")
 	}
 	t.Cleanup(func() { newZlibWriterLevel = prev })
@@ -69,8 +73,9 @@ func TestCompressXMLCreateError(t *testing.T) {
 }
 
 func TestCompressAndEncodeWithLevelCreateError(t *testing.T) {
+	t.Parallel()
 	prev := newZlibWriterLevel
-	newZlibWriterLevel = func(w io.Writer, level int) (*zlib.Writer, error) {
+	newZlibWriterLevel = func(_ io.Writer, _ int) (*zlib.Writer, error) {
 		return nil, fmt.Errorf("create failed")
 	}
 	t.Cleanup(func() { newZlibWriterLevel = prev })
@@ -82,8 +87,9 @@ func TestCompressAndEncodeWithLevelCreateError(t *testing.T) {
 }
 
 func TestCompressAndEncodeCreateError(t *testing.T) {
+	t.Parallel()
 	prev := newZlibWriterLevel
-	newZlibWriterLevel = func(w io.Writer, level int) (*zlib.Writer, error) {
+	newZlibWriterLevel = func(_ io.Writer, _ int) (*zlib.Writer, error) {
 		return nil, fmt.Errorf("create failed")
 	}
 	t.Cleanup(func() { newZlibWriterLevel = prev })
@@ -95,6 +101,7 @@ func TestCompressAndEncodeCreateError(t *testing.T) {
 }
 
 func TestCompressXMLWithLevelToWriterWriteError(t *testing.T) {
+	t.Parallel()
 	err := compressXMLWithLevelToWriter([]byte("test"), errWriter{}, 1)
 	if err == nil {
 		t.Fatal("expected error from writer")
@@ -102,6 +109,7 @@ func TestCompressXMLWithLevelToWriterWriteError(t *testing.T) {
 }
 
 func TestCompressXMLWithLevelToWriterCloseError(t *testing.T) {
+	t.Parallel()
 	writer := &closeFailWriter{}
 	err := compressXMLWithLevelToWriter([]byte("test"), writer, 1)
 	if err == nil {
@@ -110,6 +118,7 @@ func TestCompressXMLWithLevelToWriterCloseError(t *testing.T) {
 }
 
 func TestCompressXMLWriterSuccess(t *testing.T) {
+	t.Parallel()
 	var buf bytes.Buffer
 	err := compressXMLToWriter([]byte("test"), &buf)
 	if err != nil {

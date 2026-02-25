@@ -8,6 +8,7 @@ import (
 )
 
 func TestGridLayout(t *testing.T) {
+	t.Parallel()
 	l := &layout.GridLayout{}
 
 	if l.Name() != "grid" {
@@ -32,6 +33,7 @@ func TestGridLayout(t *testing.T) {
 }
 
 func TestGridLayoutFiveComponents(t *testing.T) {
+	t.Parallel()
 	l := &layout.GridLayout{}
 	components := []model.Component{{Name: "A"}, {Name: "B"}, {Name: "C"}, {Name: "D"}, {Name: "E"}}
 
@@ -42,6 +44,7 @@ func TestGridLayoutFiveComponents(t *testing.T) {
 }
 
 func TestGridLayoutSevenComponents(t *testing.T) {
+	t.Parallel()
 	l := &layout.GridLayout{}
 	components := []model.Component{{Name: "A"}, {Name: "B"}, {Name: "C"}, {Name: "D"}, {Name: "E"}, {Name: "F"}, {Name: "G"}}
 
@@ -52,6 +55,7 @@ func TestGridLayoutSevenComponents(t *testing.T) {
 }
 
 func TestGridLayoutEmpty(t *testing.T) {
+	t.Parallel()
 	l := &layout.GridLayout{}
 	pos := l.Calculate(nil, nil)
 
@@ -61,6 +65,7 @@ func TestGridLayoutEmpty(t *testing.T) {
 }
 
 func TestLayeredLayout(t *testing.T) {
+	t.Parallel()
 	l := &layout.LayeredLayout{}
 
 	if l.Name() != "layered" {
@@ -87,6 +92,7 @@ func TestLayeredLayout(t *testing.T) {
 }
 
 func TestLayeredLayoutEmpty(t *testing.T) {
+	t.Parallel()
 	l := &layout.LayeredLayout{}
 	pos := l.Calculate(nil, nil)
 
@@ -96,6 +102,7 @@ func TestLayeredLayoutEmpty(t *testing.T) {
 }
 
 func TestLayeredLayoutNoConnections(t *testing.T) {
+	t.Parallel()
 	l := &layout.LayeredLayout{}
 	components := []model.Component{
 		{Name: "A"}, {Name: "B"},
@@ -109,6 +116,7 @@ func TestLayeredLayoutNoConnections(t *testing.T) {
 }
 
 func TestIsometricLayout(t *testing.T) {
+	t.Parallel()
 	l := &layout.IsometricLayout{}
 
 	if l.Name() != "isometric" {
@@ -131,6 +139,7 @@ func TestIsometricLayout(t *testing.T) {
 }
 
 func TestIsometricLayoutUnknownConnections(t *testing.T) {
+	t.Parallel()
 	l := &layout.IsometricLayout{}
 	components := []model.Component{{Name: "A"}, {Name: "B"}}
 	connections := []model.Connection{{Source: "A", Target: "C"}, {Source: "X", Target: "B"}}
@@ -142,6 +151,7 @@ func TestIsometricLayoutUnknownConnections(t *testing.T) {
 }
 
 func TestIsometricLayoutEmpty(t *testing.T) {
+	t.Parallel()
 	l := &layout.IsometricLayout{}
 	pos := l.Calculate(nil, nil)
 
@@ -151,6 +161,7 @@ func TestIsometricLayoutEmpty(t *testing.T) {
 }
 
 func TestIsoProject(t *testing.T) {
+	t.Parallel()
 	tests := []struct {
 		x, y  float64
 		wantX float64
@@ -172,6 +183,7 @@ func TestIsoProject(t *testing.T) {
 }
 
 func TestNewLayout(t *testing.T) {
+	t.Parallel()
 	tests := []struct {
 		layoutType string
 		wantName   string

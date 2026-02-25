@@ -7,6 +7,7 @@ import (
 )
 
 func TestFallbackIsometricPositions(t *testing.T) {
+	t.Parallel()
 	components := []model.Component{{Name: "A"}, {Name: "B"}, {Name: "C"}, {Name: "D"}}
 	positions := fallbackIsometricPositions(components, 300, 100, 200, 150)
 

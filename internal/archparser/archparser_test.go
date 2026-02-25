@@ -8,6 +8,7 @@ import (
 )
 
 func TestParseAnnotation(t *testing.T) {
+	t.Parallel()
 	tests := []struct {
 		name      string
 		tag       string
@@ -60,6 +61,8 @@ func TestParseAnnotation(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+
 			ann, err := archparser.ParseAnnotation(tt.tag)
 			if tt.wantErr {
 				if err == nil {
@@ -85,6 +88,7 @@ func TestParseAnnotation(t *testing.T) {
 }
 
 func TestAnnotationToComponent(t *testing.T) {
+	t.Parallel()
 	ann, _ := archparser.ParseAnnotation(`type=database,name=Redis,description=Cache layer`)
 	comp := ann.ToComponent()
 
@@ -100,6 +104,7 @@ func TestAnnotationToComponent(t *testing.T) {
 }
 
 func TestAnnotationToConnections(t *testing.T) {
+	t.Parallel()
 	ann, _ := archparser.ParseAnnotation(`type=service,name=A,connectsTo=B;C`)
 	conns := ann.ToConnections()
 
@@ -115,6 +120,7 @@ func TestAnnotationToConnections(t *testing.T) {
 }
 
 func TestAnnotationToConnectionsEmpty(t *testing.T) {
+	t.Parallel()
 	ann, _ := archparser.ParseAnnotation(`type=service,name=A`)
 	conns := ann.ToConnections()
 
@@ -124,6 +130,7 @@ func TestAnnotationToConnectionsEmpty(t *testing.T) {
 }
 
 func TestAnnotationToConnectionsWithDirection(t *testing.T) {
+	t.Parallel()
 	ann, _ := archparser.ParseAnnotation(`type=service,name=A,connectsTo=B,direction=bidirectional`)
 	conns := ann.ToConnections()
 
@@ -136,6 +143,7 @@ func TestAnnotationToConnectionsWithDirection(t *testing.T) {
 }
 
 func TestAnnotationToConnectionsDefaultDirection(t *testing.T) {
+	t.Parallel()
 	ann, _ := archparser.ParseAnnotation(`type=service,name=A,connectsTo=B`)
 	conns := ann.ToConnections()
 
@@ -145,6 +153,7 @@ func TestAnnotationToConnectionsDefaultDirection(t *testing.T) {
 }
 
 func TestParseAnnotationMultipleFields(t *testing.T) {
+	t.Parallel()
 	ann, err := archparser.ParseAnnotation(`type=service,name=S,connectsTo=A;B,description=test desc,direction=bidirectional`)
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
@@ -164,6 +173,7 @@ func TestParseAnnotationMultipleFields(t *testing.T) {
 }
 
 func TestParseAnnotationAllComponentTypes(t *testing.T) {
+	t.Parallel()
 	types := []string{"service", "database", "queue", "cache", "api", "user", "external", "storage", "gateway"}
 	for _, compType := range types {
 		ann, err := archparser.ParseAnnotation("type=" + compType + ",name=Test")
@@ -177,6 +187,7 @@ func TestParseAnnotationAllComponentTypes(t *testing.T) {
 }
 
 func TestParseAnnotationWithColonInValue(t *testing.T) {
+	t.Parallel()
 	ann, err := archparser.ParseAnnotation(`type=service,name=A,description=has:colon`)
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
@@ -187,6 +198,7 @@ func TestParseAnnotationWithColonInValue(t *testing.T) {
 }
 
 func TestParseAnnotationDiagramOnly(t *testing.T) {
+	t.Parallel()
 	_, err := archparser.ParseAnnotation("diagram")
 	if err == nil {
 		t.Error("expected error for diagram-only tag")
@@ -194,6 +206,7 @@ func TestParseAnnotationDiagramOnly(t *testing.T) {
 }
 
 func TestParseAnnotationWithDiagramPrefix(t *testing.T) {
+	t.Parallel()
 	ann, err := archparser.ParseAnnotation("diagram,name=Test")
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
@@ -204,6 +217,7 @@ func TestParseAnnotationWithDiagramPrefix(t *testing.T) {
 }
 
 func TestParseAnnotationInvalidKV(t *testing.T) {
+	t.Parallel()
 	_, err := archparser.ParseAnnotation(`type`)
 	if err == nil {
 		t.Error("expected error for invalid key-value")
@@ -211,6 +225,7 @@ func TestParseAnnotationInvalidKV(t *testing.T) {
 }
 
 func TestParseAnnotationEmpty(t *testing.T) {
+	t.Parallel()
 	_, err := archparser.ParseAnnotation("")
 	if err == nil {
 		t.Error("expected error for empty tag")
@@ -218,6 +233,7 @@ func TestParseAnnotationEmpty(t *testing.T) {
 }
 
 func TestParseAnnotationEmptyName(t *testing.T) {
+	t.Parallel()
 	_, err := archparser.ParseAnnotation(`type=service,name=`)
 	if err == nil {
 		t.Error("expected error for empty name")
@@ -225,6 +241,7 @@ func TestParseAnnotationEmptyName(t *testing.T) {
 }
 
 func TestParseAnnotationSpacesInValues(t *testing.T) {
+	t.Parallel()
 	ann, err := archparser.ParseAnnotation(`type = service , name = TestService `)
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
@@ -235,6 +252,7 @@ func TestParseAnnotationSpacesInValues(t *testing.T) {
 }
 
 func TestAnnotationToComponentWithDirection(t *testing.T) {
+	t.Parallel()
 	ann, _ := archparser.ParseAnnotation(`type=service,name=A,direction=bidirectional`)
 	comp := ann.ToComponent()
 	if comp.Direction != model.ConnectionDirectionBidirectional {
@@ -243,6 +261,7 @@ func TestAnnotationToComponentWithDirection(t *testing.T) {
 }
 
 func TestAnnotationToConnectionsWhitespace(t *testing.T) {
+	t.Parallel()
 	ann, _ := archparser.ParseAnnotation(`type=service,name=A,connectsTo= B ; C `)
 	conns := ann.ToConnections()
 	if len(conns) != 2 {
@@ -254,6 +273,7 @@ func TestAnnotationToConnectionsWhitespace(t *testing.T) {
 }
 
 func TestAnnotationToConnectionsEmptyTarget(t *testing.T) {
+	t.Parallel()
 	ann, _ := archparser.ParseAnnotation(`type=service,name=A,connectsTo=;B;`)
 	conns := ann.ToConnections()
 	if len(conns) != 1 {

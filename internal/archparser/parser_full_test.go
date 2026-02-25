@@ -8,6 +8,7 @@ import (
 )
 
 func TestParseDirectory(t *testing.T) {
+	t.Parallel()
 	p := archparser.New()
 
 	dir := t.TempDir()
@@ -47,6 +48,7 @@ type Database struct {
 }
 
 func TestParse(t *testing.T) {
+	t.Parallel()
 	p := archparser.New()
 
 	diagram, err := p.Parse("testdata/sample.go")
@@ -60,6 +62,7 @@ func TestParse(t *testing.T) {
 }
 
 func TestParseDirectoryEmpty(t *testing.T) {
+	t.Parallel()
 	p := archparser.New()
 
 	dir := t.TempDir()
@@ -71,6 +74,7 @@ func TestParseDirectoryEmpty(t *testing.T) {
 }
 
 func TestParseNonExistent(t *testing.T) {
+	t.Parallel()
 	p := archparser.New()
 
 	_, err := p.Parse("nonexistent.go")
@@ -80,6 +84,7 @@ func TestParseNonExistent(t *testing.T) {
 }
 
 func TestParseStructTag(t *testing.T) {
+	t.Parallel()
 	tests := []struct {
 		name     string
 		tagValue string
@@ -108,6 +113,8 @@ func TestParseStructTag(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+
 			got := archparser.ParseStructTag(tt.tagValue, tt.key)
 			if got != tt.want {
 				t.Errorf("ParseStructTag() = %q, want %q", got, tt.want)
@@ -117,6 +124,7 @@ func TestParseStructTag(t *testing.T) {
 }
 
 func TestParseFileWithInvalidGo(t *testing.T) {
+	t.Parallel()
 	p := archparser.New()
 
 	tmpFile := "/tmp/invalid.go"
@@ -135,6 +143,7 @@ invalid code here
 }
 
 func TestParseDirectoryWithInvalidFile(t *testing.T) {
+	t.Parallel()
 	p := archparser.New()
 
 	dir := t.TempDir()
@@ -156,6 +165,7 @@ func TestParseDirectoryWithInvalidFile(t *testing.T) {
 }
 
 func TestParseFileWithInvalidAnnotation(t *testing.T) {
+	t.Parallel()
 	p := archparser.New()
 
 	tmpFile := "/tmp/invalid_anno.go"
@@ -180,6 +190,7 @@ type S struct {
 }
 
 func TestParseFileWithNonStruct(t *testing.T) {
+	t.Parallel()
 	p := archparser.New()
 
 	tmpFile := "/tmp/interface.go"
@@ -204,6 +215,7 @@ type MyInterface interface {
 }
 
 func TestParseFileWithNoFields(t *testing.T) {
+	t.Parallel()
 	p := archparser.New()
 
 	tmpFile := "/tmp/empty.go"
@@ -226,6 +238,7 @@ type Empty struct {}
 }
 
 func TestParseDirectoryWithOnlySubdirs(t *testing.T) {
+	t.Parallel()
 	p := archparser.New()
 
 	dir := t.TempDir()
@@ -247,6 +260,7 @@ func TestParseDirectoryWithOnlySubdirs(t *testing.T) {
 }
 
 func TestParseDirectoryReadError(t *testing.T) {
+	t.Parallel()
 	p := archparser.New()
 
 	dir := "/nonexistent_dir_12345"
@@ -257,6 +271,7 @@ func TestParseDirectoryReadError(t *testing.T) {
 }
 
 func TestParseWithFile(t *testing.T) {
+	t.Parallel()
 	p := archparser.New()
 
 	tmpFile := "/tmp/test_parse_file.go"
@@ -279,6 +294,7 @@ type S struct { F string `+"`"+`diagram:"type=service,name=S"`+"`"+` }
 }
 
 func TestParseWithDirectory(t *testing.T) {
+	t.Parallel()
 	p := archparser.New()
 
 	dir := t.TempDir()
@@ -301,6 +317,7 @@ type S struct { F string `+"`"+`diagram:"type=service,name=S"`+"`"+` }
 }
 
 func TestParseFileWithMultipleFields(t *testing.T) {
+	t.Parallel()
 	p := archparser.New()
 
 	tmpFile := "/tmp/multi_field.go"
@@ -326,6 +343,7 @@ type UserService struct {
 }
 
 func TestParseFileWithFieldWithoutTag(t *testing.T) {
+	t.Parallel()
 	p := archparser.New()
 
 	tmpFile := "/tmp/mixed.go"
@@ -351,6 +369,7 @@ type S struct {
 }
 
 func TestParseFileWithEmptyDiagramTag(t *testing.T) {
+	t.Parallel()
 	p := archparser.New()
 
 	tmpFile := "/tmp/empty_tag.go"
@@ -375,6 +394,7 @@ func TestParseFileWithEmptyDiagramTag(t *testing.T) {
 }
 
 func TestParseFileWithNonDiagramTag(t *testing.T) {
+	t.Parallel()
 	p := archparser.New()
 
 	tmpFile := "/tmp/non_diagram_tag.go"

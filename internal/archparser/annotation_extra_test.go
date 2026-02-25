@@ -8,6 +8,7 @@ import (
 )
 
 func TestParseAnnotationNewFields(t *testing.T) {
+	t.Parallel()
 	tests := []struct {
 		name      string
 		tag       string
@@ -59,6 +60,7 @@ func TestParseAnnotationNewFields(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
 			ann, err := archparser.ParseAnnotation(tt.tag)
 			if err != nil {
 				t.Errorf("unexpected error: %v", err)
@@ -78,6 +80,7 @@ func TestParseAnnotationNewFields(t *testing.T) {
 }
 
 func TestParseAnnotationInvalid(t *testing.T) {
+	t.Parallel()
 	tests := []struct {
 		name    string
 		tag     string
@@ -97,6 +100,7 @@ func TestParseAnnotationInvalid(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
 			_, err := archparser.ParseAnnotation(tt.tag)
 			if tt.wantErr && err == nil {
 				t.Error("expected error, got nil")

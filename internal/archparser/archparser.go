@@ -123,6 +123,7 @@ func (p *Parser) Parse(inputPath string) (*model.Diagram, error) {
 	return p.ParseFile(inputPath)
 }
 
+// ParseStructTag extracts a value for a key from a struct tag.
 func ParseStructTag(tagValue, key string) string {
 	tagValue = tagValue[1 : len(tagValue)-1]
 	tagValue = strings.ReplaceAll(tagValue, `\"`, `"`)

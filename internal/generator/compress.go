@@ -9,8 +9,10 @@ import (
 	"io"
 )
 
+// CompressionLevel defines zlib compression levels.
 type CompressionLevel int
 
+// Compression level constants mirror compress/zlib levels.
 const (
 	BestCompression      CompressionLevel = CompressionLevel(zlib.BestCompression)
 	BestSpeedCompression CompressionLevel = CompressionLevel(zlib.BestSpeed)

@@ -97,6 +97,7 @@ func (g *DrawIOGenerator) Generate(diagram *model.Diagram) ([]byte, error) {
 	return []byte(sb.String()), nil
 }
 
+// BuildPages constructs pages from the diagram or uses pre-built pages.
 func (g *DrawIOGenerator) BuildPages(diagram *model.Diagram) []model.Page {
 	if len(diagram.Pages) > 0 {
 		return diagram.Pages
@@ -137,6 +138,7 @@ func (g *DrawIOGenerator) BuildPages(diagram *model.Diagram) []model.Page {
 	return pages
 }
 
+// GeneratePageXML renders a single page to draw.io XML.
 func (g *DrawIOGenerator) GeneratePageXML(page model.Page, swimlanes []Swimlane, positions map[string]Position) string {
 	var sb strings.Builder
 
@@ -208,6 +210,7 @@ func (g *DrawIOGenerator) GeneratePageXML(page model.Page, swimlanes []Swimlane,
 	return sb.String()
 }
 
+// BuildComponentStyle returns the draw.io style string for a component.
 func (g *DrawIOGenerator) BuildComponentStyle(comp model.Component) string {
 	var style Style
 
@@ -261,6 +264,7 @@ func (g *DrawIOGenerator) BuildComponentStyle(comp model.Component) string {
 	return style.String()
 }
 
+// BuildEdgeStyle returns the draw.io style string for a connection.
 func (g *DrawIOGenerator) BuildEdgeStyle(conn model.Connection) string {
 	var style Style
 
@@ -289,6 +293,7 @@ type Position struct {
 	Y int
 }
 
+// EscapeXML escapes XML special characters.
 func EscapeXML(s string) string {
 	s = strings.ReplaceAll(s, "&", "&amp;")
 	s = strings.ReplaceAll(s, "<", "&lt;")

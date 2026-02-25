@@ -7,6 +7,7 @@ import (
 )
 
 func TestPruneEmptySwimlanes(t *testing.T) {
+	t.Parallel()
 	swimlaneMap := map[string]*Swimlane{
 		"empty":  {Name: "empty", Children: []string{}},
 		"filled": {Name: "filled", Children: []string{"A"}},
@@ -23,6 +24,7 @@ func TestPruneEmptySwimlanes(t *testing.T) {
 }
 
 func TestBuildSwimlanesBounds(t *testing.T) {
+	t.Parallel()
 	components := []model.Component{
 		{Name: "A", Swimlane: "Lane"},
 		{Name: "B", Swimlane: "Lane"},
