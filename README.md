@@ -6,9 +6,14 @@ A Go-based Cobra CLI tool that generates software diagrams from code annotations
 
 - Generate diagrams from Go struct tags
 - Support for multiple component types (services, databases, queues, caches, etc.)
-- Automatic layout calculation
+- Automatic layout calculation (grid, layered, isometric)
 - Connection arrows between components
-- draw.io XML output
+- draw.io XML output with optional compression
+- Isometric shapes (cube, server, database, container, cloud)
+- Advanced styling (gradients, shadows, fonts, opacity)
+- Swimlane containers for grouping components
+- Multiple diagram pages
+- Edge styles (straight, orthogonal, curved, elbow)
 
 ## Installation
 
@@ -37,6 +42,12 @@ diagram-gen generate ./internal/services/ -o architecture.drawio
 
 # Specify diagram type
 diagram-gen generate input.go -t architecture -o diagram.drawio
+
+# Use isometric layout
+diagram-gen generate input.go --layout isometric -o diagram.drawio
+
+# Compress output
+diagram-gen generate input.go --compress -o diagram.drawio
 ```
 
 ## CLI Flags
@@ -45,6 +56,12 @@ diagram-gen generate input.go -t architecture -o diagram.drawio
 |------|-------|---------|-------------|
 | `--output` | `-o` | `diagram.drawio` | Output file path |
 | `--type` | `-t` | `architecture` | Diagram type (architecture, flowchart, network) |
+| `--layout` | | `layered` | Layout engine (grid, layered, isometric) |
+| `--isometric` | | false | Shortcut for --layout isometric |
+| `--shape` | | | Default shape for components |
+| `--compress` | | false | Compress output with deflate+base64 |
+| `--config` | | | Path to config file |
+| `--page` | | | Generate specific page |
 
 ## Annotation Syntax
 
@@ -79,7 +96,7 @@ type RedisCache struct {
 }
 ```
 
-### Tag Fields
+### Extended Tag Fields
 
 | Field | Required | Description |
 |-------|----------|-------------|
@@ -88,6 +105,17 @@ type RedisCache struct {
 | `connectsTo` | No | Semicolon-separated list of target components |
 | `description` | No | Optional description text |
 | `direction` | No | Flow direction (`unidirectional` or `bidirectional`) |
+| `page` | No | Page name for multi-page diagrams |
+| `swimlane` | No | Swimlane container name |
+| `shape` | No | Shape type (rectangle, ellipse, iso:server, iso:database, etc.) |
+| `fillColor` | No | Fill color (hex format) |
+| `strokeColor` | No | Stroke color (hex format) |
+| `gradientColor` | No | Gradient end color |
+| `gradientDirection` | No | Gradient direction (north, south, east, west) |
+| `fontSize` | No | Font size |
+| `fontFamily` | No | Font family |
+| `edgeStyle` | No | Edge style (straightEdgeStyle, orthogonalEdgeEdgeStyle, curvedStyle, elbowEdgeStyle) |
+| `endArrow` | No | End arrow style (block, open, classic, diamond) |
 
 ### Component Types
 
@@ -103,17 +131,66 @@ type RedisCache struct {
 | `external` | Document | Gray |
 | `storage` | Cylinder | Yellow |
 
-### Connections
+### Isometric Shapes
 
-Connect components using semicolons:
+| Type | Shape |
+|------|-------|
+| `iso:cube` | Isometric cube |
+| `iso:server` | Isometric server |
+| `iso:database` | Isometric database |
+| `iso:container` | Isometric container |
+| `iso:cloud` | Isometric cloud |
+| `iso:network` | Isometric network |
+| `iso:cylinder` | Isometric cylinder |
 
+Example:
 ```go
-type ServiceA struct {
-    Field string `diagram:"type=service,name=ServiceA,connectsTo=ServiceB;ServiceC"`
+type CloudService struct {
+    Field string `diagram:"type=service,shape=iso:cloud,name=CloudService"`
 }
 ```
 
-This creates two arrows from ServiceA to ServiceB and ServiceC.
+### Swimlanes
+
+Group components into swimlanes:
+
+```go
+type ServiceA struct {
+    Field string `diagram:"name=ServiceA,swimlane=AWS"`
+}
+
+type ServiceB struct {
+    Field string `diagram:"name=ServiceB,swimlane=AWS"`
+}
+
+type DatabaseA struct {
+    Field string `diagram:"name=DatabaseA,swimlane=On-Premise"`
+}
+```
+
+### Multi-Page Diagrams
+
+Organize components into pages:
+
+```go
+type NetworkComponent struct {
+    Field string `diagram:"name=LoadBalancer,page=Network View"`
+}
+
+type ServiceComponent struct {
+    Field string `diagram:"name=API,page=Services"`
+}
+```
+
+### Styling
+
+Apply custom styling:
+
+```go
+type MyService struct {
+    Field string `diagram:"name=MyService,fillColor=#dae8fc,strokeColor=#6c8ebf,fontSize=14"`
+}
+```
 
 ## Example Output
 
@@ -196,6 +273,12 @@ jobs:
 
 ```bash
 go test ./...
+```
+
+### Run Linter
+
+```bash
+golangci-lint-v2 run
 ```
 
 ### Build
